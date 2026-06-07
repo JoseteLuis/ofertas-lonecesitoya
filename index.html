@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ofertas LoNecesitoYa - Las mejores ofertas de Amazon</title>
+<meta name="description" content="Las mejores ofertas de Amazon cada día. Hogar, Tecnología, Deporte, Moda e Infantil.">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f0; color: #1a1a1a; }
+header { background: linear-gradient(135deg, #ff9900, #ff6600); padding: 1.5rem 1rem; text-align: center; }
+header h1 { color: white; font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+header p { color: rgba(255,255,255,0.9); font-size: 14px; }
+.telegram-btn { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; background: #229ED9; color: white; padding: 8px 18px; border-radius: 20px; text-decoration: none; font-size: 14px; font-weight: 600; }
+.filtros { display: flex; gap: 8px; padding: 1rem; overflow-x: auto; background: white; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 10; }
+.filtro { border: 1.5px solid #ddd; border-radius: 20px; padding: 6px 14px; font-size: 13px; cursor: pointer; white-space: nowrap; background: white; color: #666; transition: all 0.15s; }
+.filtro.active { background: #ff9900; border-color: #ff9900; color: white; font-weight: 600; }
+.stats { text-align: center; padding: 1rem; font-size: 13px; color: #888; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; padding: 1rem; max-width: 1200px; margin: 0 auto; }
+.card { background: white; border-radius: 12px; overflow: hidden; border: 0.5px solid #e0e0e0; transition: transform 0.15s, box-shadow 0.15s; }
+.card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+.card img { width: 100%; height: 200px; object-fit: contain; background: #fafafa; padding: 1rem; }
+.card-body { padding: 1rem; }
+.cat-badge { display: inline-block; font-size: 11px; padding: 3px 8px; border-radius: 10px; font-weight: 600; margin-bottom: 8px; }
+.cat-hogar { background: #FFF3E0; color: #E65100; }
+.cat-tecnologia { background: #E3F2FD; color: #1565C0; }
+.cat-deporte { background: #E8F5E9; color: #2E7D32; }
+.cat-moda { background: #FCE4EC; color: #880E4F; }
+.cat-infantil { background: #F3E5F5; color: #6A1B9A; }
+.card h3 { font-size: 14px; line-height: 1.4; margin-bottom: 8px; color: #1a1a1a; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.precio { font-size: 20px; font-weight: 700; color: #ff9900; margin-bottom: 8px; }
+.fecha { font-size: 11px; color: #aaa; margin-bottom: 10px; }
+.btn-comprar { display: block; background: #ff9900; color: white; text-align: center; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; transition: background 0.15s; }
+.btn-comprar:hover { background: #e68900; }
+.vacio { text-align: center; padding: 4rem 1rem; color: #aaa; grid-column: 1/-1; }
+.vacio .ico { font-size: 48px; margin-bottom: 1rem; }
+footer { text-align: center; padding: 2rem 1rem; font-size: 12px; color: #aaa; border-top: 1px solid #eee; margin-top: 2rem; }
+footer a { color: #ff9900; text-decoration: none; }
+@media (max-width: 600px) {
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 8px; }
+  .card img { height: 140px; }
+  header h1 { font-size: 20px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Ofertas LoNecesitoYa</h1>
+  <p>Las mejores ofertas de Amazon cada dia</p>
+  <a href="https://t.me/OfertasLoNecesitoYa" class="telegram-btn" target="_blank">Unete a nuestro canal de Telegram</a>
+</header>
+<div class="filtros">
+  <button class="filtro active" onclick="filtrar(this,'todos')">Todos</button>
+  <button class="filtro" onclick="filtrar(this,'hogar')">Hogar</button>
+  <button class="filtro" onclick="filtrar(this,'tecnologia')">Tecnologia</button>
+  <button class="filtro" onclick="filtrar(this,'deporte')">Deporte</button>
+  <button class="filtro" onclick="filtrar(this,'moda')">Moda</button>
+  <button class="filtro" onclick="filtrar(this,'infantil')">Infantil</button>
+</div>
+<div class="stats" id="stats">Cargando ofertas...</div>
+<div class="grid" id="grid"></div>
+<footer>
+  <p>Como afiliado de Amazon, obtenemos comisiones por compras enlazadas.</p>
+  <p style="margin-top:8px">Siguenos en <a href="https://t.me/OfertasLoNecesitoYa" target="_blank">Telegram</a> para recibir las ofertas al instante.</p>
+</footer>
+<script>
+let ofertas = [];
+let catActual = 'todos';
+const CATS = { hogar:'Hogar', tecnologia:'Tecnologia', deporte:'Deporte', moda:'Moda', infantil:'Infantil' };
+
+async function cargarOfertas() {
+  try {
+    const r = await fetch('ofertas.json?t=' + Date.now());
+    ofertas = await r.json();
+    ofertas.sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
+  } catch(e) { ofertas = []; }
+  renderizar();
+}
+
+function filtrar(el, cat) {
+  catActual = cat;
+  document.querySelectorAll('.filtro').forEach(f => f.classList.remove('active'));
+  el.classList.add('active');
+  renderizar();
+}
+
+function renderizar() {
+  const f = catActual === 'todos' ? ofertas : ofertas.filter(o => o.categoria === catActual);
+  document.getElementById('stats').textContent = f.length + ' ofertas disponibles';
+  if (!f.length) {
+    document.getElementById('grid').innerHTML = '<div class="vacio"><div class="ico">🔍</div><p>No hay ofertas en esta categoria todavia</p></div>';
+    return;
+  }
+  document.getElementById('grid').innerHTML = f.map(o => {
+    const fecha = new Date(o.fecha).toLocaleDateString('es-ES', {day:'numeric', month:'short'});
+    return '<div class="card">' +
+      (o.imagen ? '<img src="' + o.imagen + '" alt="' + o.titulo + '" loading="lazy" onerror="this.style.display=\'none\'">' : '') +
+      '<div class="card-body">' +
+      '<span class="cat-badge cat-' + o.categoria + '">' + (CATS[o.categoria] || o.categoria) + '</span>' +
+      '<h3>' + o.titulo + '</h3>' +
+      (o.precio ? '<div class="precio">' + o.precio + '</div>' : '') +
+      '<div class="fecha">' + fecha + '</div>' +
+      '<a href="' + o.url + '" class="btn-comprar" target="_blank" rel="nofollow">Ver oferta en Amazon</a>' +
+      '</div></div>';
+  }).join('');
+}
+
+cargarOfertas();
+</script>
+</body>
+</html>

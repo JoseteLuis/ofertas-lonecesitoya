@@ -11,8 +11,8 @@ from datetime import datetime
 BASE_DIR = os.getcwd()
 app = Flask(__name__)
 
-BOT_TOKEN = os.environ.get('BOT_TOKEN', '8768541797:AAHlQNzsC1lGce537NhTRYtC8cMzUpjZq1Y')
-CHAT_ID = os.environ.get('CHAT_ID', '-1003965327203')
+BOT_TOKEN = os.environ.get('BOT_TOKEN', '')
+CHAT_ID = os.environ.get('CHAT_ID', '')
 AFFILIATE_TAG = os.environ.get('AFFILIATE_TAG', 'lonecesitoya-21')
 GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN', '')
 GITHUB_USER = os.environ.get('GITHUB_USER', 'JoseteLuis')

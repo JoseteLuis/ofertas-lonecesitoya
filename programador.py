@@ -6,8 +6,8 @@ import base64
 from datetime import datetime
 
 import os
-BOT_TOKEN = os.environ.get('BOT_TOKEN', '8768541797:AAHlQNzsC1lGce537NhTRYtC8cMzUpjZq1Y')
-CHAT_ID = os.environ.get('CHAT_ID', '-1003965327203')
+BOT_TOKEN = os.environ.get('BOT_TOKEN', '')
+CHAT_ID = os.environ.get('CHAT_ID', '')
 GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN', '')
 GITHUB_USER = os.environ.get('GITHUB_USER', 'JoseteLuis')
 GITHUB_REPO = os.environ.get('GITHUB_REPO', 'ofertas-lonecesitoya')

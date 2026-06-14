@@ -8,7 +8,7 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f0; color: #1a1a1a; }
-header { background: linear-gradient(135deg, #ff9900, #ff6600); padding: 1.5rem 1rem; text-align: center; }
+header { background: linear-gradient(135deg, #ff9900, #ff6600); padding: 1.5rem 2rem; display: flex; align-items: center; gap: 1.5rem; }
 header h1 { color: white; font-size: 26px; font-weight: 700; margin-bottom: 4px; }
 header p { color: rgba(255,255,255,0.9); font-size: 14px; }
 .telegram-btn { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; background: #229ED9; color: white; padding: 8px 18px; border-radius: 20px; text-decoration: none; font-size: 14px; font-weight: 600; }
@@ -45,10 +45,12 @@ footer a { color: #ff9900; text-decoration: none; }
 </head>
 <body>
 <header>
-  <img src="logo.png" alt="Ofertas LoNecesitoYa" style="width:90px;height:90px;object-fit:contain;margin-bottom:8px;">
-  <h1>Ofertas LoNecesitoYa</h1>
-  <p>Las mejores ofertas de Amazon cada dia</p>
-  <a href="https://t.me/OfertasLoNecesitoYa" class="telegram-btn" target="_blank">Unete a nuestro canal de Telegram</a>
+  <img src="logo.png" alt="Ofertas LoNecesitoYa" style="width:130px;height:130px;object-fit:contain;flex-shrink:0;">
+  <div>
+    <h1>Ofertas LoNecesitoYa</h1>
+    <p>Las mejores ofertas de Amazon cada dia</p>
+    <a href="https://t.me/OfertasLoNecesitoYa" class="telegram-btn" target="_blank">Unete a nuestro canal de Telegram</a>
+  </div>
 </header>
 <div class="filtros">
   <button class="filtro active" onclick="filtrar(this,'todos')">Todos</button>

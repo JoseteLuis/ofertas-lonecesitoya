@@ -3,318 +3,115 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LoNecesitoYa - Panel de Ofertas</title>
+<title>Ofertas LoNecesitoYa - Las mejores ofertas de Amazon</title>
+<meta name="description" content="Las mejores ofertas de Amazon cada día. Hogar, Tecnología, Deporte, Moda e Infantil.">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f0; color: #1a1a1a; }
-header { background: linear-gradient(135deg, #ff9900, #ff6600); padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
-header h1 { color: white; font-size: 18px; font-weight: 700; }
-header span { color: rgba(255,255,255,0.85); font-size: 13px; }
-.tabs { display: flex; background: white; border-bottom: 1px solid #eee; }
-.tab { flex: 1; padding: 12px; text-align: center; font-size: 14px; cursor: pointer; color: #888; border-bottom: 2px solid transparent; }
-.tab.active { color: #ff9900; border-bottom-color: #ff9900; font-weight: 600; }
-.panel { display: none; max-width: 720px; margin: 0 auto; padding: 1rem; }
-.panel.active { display: block; }
-.card { background: white; border-radius: 12px; border: 0.5px solid #e0e0e0; padding: 1.25rem; margin-bottom: 1rem; }
-.card-title { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1rem; }
-label { font-size: 13px; color: #666; display: block; margin: 8px 0 4px; }
-input[type=text], textarea { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; font-family: inherit; outline: none; transition: border 0.15s; }
-input[type=text]:focus, textarea:focus { border-color: #ff9900; }
-textarea { height: 70px; resize: vertical; }
-.url-row { display: flex; gap: 8px; }
-.url-row input { flex: 1; }
-.btn-extraer { background: #ff9900; color: white; border: none; border-radius: 8px; padding: 10px 16px; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; }
-.btn-extraer:hover { background: #e68900; }
-.btn-extraer:disabled { background: #ccc; cursor: not-allowed; }
-.cats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 4px; }
-.cat { border: 1.5px solid #e0e0e0; border-radius: 10px; padding: 8px 4px; text-align: center; cursor: pointer; font-size: 12px; color: #666; background: white; transition: all 0.15s; }
-.cat .ico { font-size: 20px; display: block; margin-bottom: 3px; }
-.cat.active { border-color: #ff9900; background: #FFF3E0; color: #E65100; font-weight: 600; }
-.prod-info { display: flex; gap: 1rem; align-items: flex-start; }
-.prod-img { width: 90px; height: 90px; object-fit: contain; border-radius: 8px; border: 1px solid #eee; flex-shrink: 0; background: #fafafa; display: flex; align-items: center; justify-content: center; font-size: 28px; }
-.prod-fields { flex: 1; }
-.preview-box { background: #f8f8f8; border-radius: 8px; padding: 1rem; font-size: 13px; line-height: 1.7; white-space: pre-wrap; color: #333; min-height: 80px; border: 1px solid #eee; }
-.hashtags { font-size: 12px; color: #1D9E75; margin-top: 6px; }
-.actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-.btn-pub { background: #229ED9; color: white; border: none; border-radius: 8px; padding: 11px; font-size: 14px; font-weight: 600; cursor: pointer; }
-.btn-pub:hover { background: #1a8bbf; }
-.btn-cola { background: #1D9E75; color: white; border: none; border-radius: 8px; padding: 11px; font-size: 14px; font-weight: 600; cursor: pointer; }
-.btn-cola:hover { background: #0F6E56; }
-.btn-clear { background: white; color: #666; border: 1px solid #ddd; border-radius: 8px; padding: 11px; font-size: 14px; cursor: pointer; }
-.status { margin-top: 10px; padding: 10px 14px; border-radius: 8px; font-size: 13px; display: none; }
-.status.ok { background: #E1F5EE; color: #085041; display: block; }
-.status.err { background: #FCEBEB; color: #7a1f1f; display: block; }
-.status.loading { background: #f0f0f0; color: #666; display: block; }
-.spinner { display: inline-block; width: 12px; height: 12px; border: 2px solid #ccc; border-top-color: #ff9900; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.cola-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-.cola-badge { background: #ff9900; color: white; border-radius: 12px; padding: 3px 10px; font-size: 13px; font-weight: 700; }
-.cola-item { background: white; border-radius: 10px; border: 0.5px solid #e0e0e0; padding: 12px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
-.cola-item img { width: 50px; height: 50px; object-fit: contain; border-radius: 6px; background: #fafafa; flex-shrink: 0; }
-.cola-item-info { flex: 1; min-width: 0; }
-.cola-item-titulo { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cola-item-meta { font-size: 12px; color: #888; margin-top: 3px; }
-.btn-eliminar { background: #FCEBEB; color: #7a1f1f; border: none; border-radius: 6px; padding: 6px 10px; font-size: 12px; cursor: pointer; flex-shrink: 0; }
-.cola-vacia { text-align: center; padding: 3rem 1rem; color: #aaa; }
-.cola-vacia .ico { font-size: 40px; margin-bottom: 1rem; }
-.horario { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
-.hora { background: #FFF3E0; border-radius: 8px; padding: 10px; text-align: center; font-size: 13px; font-weight: 600; color: #E65100; }
+header { background: linear-gradient(135deg, #ff9900, #ff6600); padding: 1.5rem 2rem; display: flex; align-items: center; gap: 1.5rem; }
+header img { width: 130px; height: 130px; object-fit: contain; flex-shrink: 0; }
+header h1 { color: white; font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+header p { color: rgba(255,255,255,0.9); font-size: 15px; margin-bottom: 12px; }
+.telegram-btn { display: inline-flex; align-items: center; gap: 8px; background: #229ED9; color: white; padding: 9px 20px; border-radius: 20px; text-decoration: none; font-size: 14px; font-weight: 600; }
+.filtros { display: flex; gap: 8px; padding: 1rem; overflow-x: auto; background: white; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 10; }
+.filtro { border: 1.5px solid #ddd; border-radius: 20px; padding: 6px 14px; font-size: 13px; cursor: pointer; white-space: nowrap; background: white; color: #666; transition: all 0.15s; }
+.filtro.active { background: #ff9900; border-color: #ff9900; color: white; font-weight: 600; }
+.stats { text-align: center; padding: 1rem; font-size: 13px; color: #888; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; padding: 1rem; max-width: 1200px; margin: 0 auto; }
+.card { background: white; border-radius: 12px; overflow: hidden; border: 0.5px solid #e0e0e0; transition: transform 0.15s, box-shadow 0.15s; }
+.card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+.card img { width: 100%; height: 200px; object-fit: contain; background: #fafafa; padding: 1rem; }
+.card-body { padding: 1rem; }
+.cat-badge { display: inline-block; font-size: 11px; padding: 3px 8px; border-radius: 10px; font-weight: 600; margin-bottom: 8px; }
+.cat-hogar { background: #FFF3E0; color: #E65100; }
+.cat-tecnologia { background: #E3F2FD; color: #1565C0; }
+.cat-deporte { background: #E8F5E9; color: #2E7D32; }
+.cat-moda { background: #FCE4EC; color: #880E4F; }
+.cat-infantil { background: #F3E5F5; color: #6A1B9A; }
+.card h3 { font-size: 14px; line-height: 1.4; margin-bottom: 8px; color: #1a1a1a; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.precio { font-size: 20px; font-weight: 700; color: #ff9900; margin-bottom: 8px; }
+.fecha { font-size: 11px; color: #aaa; margin-bottom: 10px; }
+.btn-comprar { display: block; background: #ff9900; color: white; text-align: center; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; transition: background 0.15s; }
+.btn-comprar:hover { background: #e68900; }
+.vacio { text-align: center; padding: 4rem 1rem; color: #aaa; grid-column: 1/-1; }
+.vacio .ico { font-size: 48px; margin-bottom: 1rem; }
+footer { text-align: center; padding: 2rem 1rem; font-size: 12px; color: #aaa; border-top: 1px solid #eee; margin-top: 2rem; }
+footer a { color: #ff9900; text-decoration: none; }
+@media (max-width: 600px) {
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 8px; }
+  .card img { height: 140px; }
+  header { padding: 1rem; }
+  header img { width: 80px; height: 80px; }
+  header h1 { font-size: 20px; }
+}
 </style>
 </head>
 <body>
-
 <header>
+  <img src="logo.png" alt="Ofertas LoNecesitoYa">
   <div>
-    <h1>Panel LoNecesitoYa</h1>
-    <span>@OfertasLoNecesitoYa</span>
+    <h1>Ofertas LoNecesitoYa</h1>
+    <p>Las mejores ofertas de Amazon cada dia</p>
+    <a href="https://t.me/OfertasLoNecesitoYa" class="telegram-btn" target="_blank">Unete a nuestro canal de Telegram</a>
   </div>
-  <div id="colaBadge" style="background:white;color:#ff9900;border-radius:12px;padding:4px 12px;font-size:13px;font-weight:700;">Cola: 0</div>
 </header>
-
-<div class="tabs">
-  <div class="tab active" onclick="cambiarTab('publicar', this)">Publicar ahora</div>
-  <div class="tab" onclick="cambiarTab('cola', this)">Cola programada</div>
+<div class="filtros">
+  <button class="filtro active" onclick="filtrar(this,'todos')">Todos</button>
+  <button class="filtro" onclick="filtrar(this,'hogar')">🏠 Hogar</button>
+  <button class="filtro" onclick="filtrar(this,'tecnologia')">📱 Tecnologia</button>
+  <button class="filtro" onclick="filtrar(this,'deporte')">⚽ Deporte</button>
+  <button class="filtro" onclick="filtrar(this,'moda')">👗 Moda</button>
+  <button class="filtro" onclick="filtrar(this,'infantil')">👶 Infantil</button>
 </div>
-
-<!-- PANEL PUBLICAR -->
-<div class="panel active" id="tab-publicar">
-
-  <div class="card">
-    <div class="card-title">1. URL del producto</div>
-    <div class="url-row">
-      <input type="text" id="urlInput" placeholder="https://www.amazon.es/dp/..." />
-      <button class="btn-extraer" id="btnExtraer" onclick="extraer()">Extraer info</button>
-    </div>
-    <div class="status" id="statusExtraer"></div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">2. Informacion del producto</div>
-    <div class="prod-info">
-      <div class="prod-img" id="imgPlaceholder">📦</div>
-      <img id="prodImg" style="display:none;width:90px;height:90px;object-fit:contain;border-radius:8px;border:1px solid #eee;" />
-      <div class="prod-fields">
-        <label>Titulo</label>
-        <input type="text" id="titleInput" placeholder="Se rellena automaticamente..." oninput="actualizarPreview()" />
-        <label>Precio</label>
-        <input type="text" id="priceInput" placeholder="Se rellena automaticamente..." oninput="actualizarPreview()" />
-      </div>
-    </div>
-    <label>Descripcion extra (opcional)</label>
-    <textarea id="descInput" placeholder="Añade detalles si quieres..." oninput="actualizarPreview()"></textarea>
-  </div>
-
-  <div class="card">
-    <div class="card-title">3. Categoria</div>
-    <div class="cats">
-      <div class="cat active" onclick="selCat(this,'hogar')" data-hashtags="#hogar #casa #amazon #oferta #decoracion"><span class="ico">🏠</span>Hogar</div>
-      <div class="cat" onclick="selCat(this,'tecnologia')" data-hashtags="#tecnologia #gadgets #tech #amazon #electronica"><span class="ico">📱</span>Tecnologia</div>
-      <div class="cat" onclick="selCat(this,'deporte')" data-hashtags="#deporte #fitness #sport #amazon #gym"><span class="ico">⚽</span>Deporte</div>
-      <div class="cat" onclick="selCat(this,'moda')" data-hashtags="#moda #fashion #amazon #tendencia #ropa"><span class="ico">👗</span>Moda</div>
-      <div class="cat" onclick="selCat(this,'infantil')" data-hashtags="#ninos #infantil #amazon #juguetes #bebe"><span class="ico">👶</span>Infantil</div>
-    </div>
-    <div class="hashtags" id="hashPreview">#hogar #casa #amazon #oferta #decoracion</div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">4. Vista previa y publicacion</div>
-    <div class="preview-box" id="msgPreview">Rellena los campos para ver la vista previa...</div>
-    <div class="actions">
-      <button class="btn-pub" onclick="publicar()">Publicar ahora</button>
-      <button class="btn-cola" onclick="anadirCola()">Añadir a cola</button>
-    </div>
-    <button class="btn-clear" style="width:100%;margin-top:8px;" onclick="limpiarTodo()">Limpiar todo</button>
-    <div class="status" id="statusPublicar"></div>
-  </div>
-
-</div>
-
-<!-- PANEL COLA -->
-<div class="panel" id="tab-cola">
-
-  <div class="card">
-    <div class="card-title">Horario de publicacion automatica</div>
-    <div class="horario">
-      <div class="hora">09:00</div>
-      <div class="hora">14:00</div>
-      <div class="hora">21:00</div>
-    </div>
-    <p style="font-size:12px;color:#aaa;margin-top:8px;">Se publican hasta 5 productos por sesion. El programador debe estar corriendo.</p>
-  </div>
-
-  <div class="card">
-    <div class="cola-header">
-      <div class="card-title" style="margin:0">Productos en cola</div>
-      <span class="cola-badge" id="colaBadge2">0 productos</span>
-    </div>
-    <div id="listaColaEl"></div>
-  </div>
-
-</div>
-
+<div class="stats" id="stats">Cargando ofertas...</div>
+<div class="grid" id="grid"></div>
+<footer>
+  <p>Como afiliado de Amazon, obtenemos comisiones por compras enlazadas.</p>
+  <p style="margin-top:8px">Siguenos en <a href="https://t.me/OfertasLoNecesitoYa" target="_blank">Telegram</a> para recibir las ofertas al instante.</p>
+</footer>
 <script>
-const EMOJIS = { hogar:'🏠', tecnologia:'📱', deporte:'⚽', moda:'👗', infantil:'👶' };
-let catActual = 'hogar';
-let hashActual = '#hogar #casa #amazon #oferta #decoracion';
-let urlAfiliado = '';
-let imagenUrl = '';
+let ofertas = [];
+let catActual = 'todos';
+const CATS = { hogar:'Hogar', tecnologia:'Tecnologia', deporte:'Deporte', moda:'Moda', infantil:'Infantil' };
 
-function cambiarTab(nombre, el) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('tab-' + nombre).classList.add('active');
-  if (nombre === 'cola') cargarCola();
+async function cargarOfertas() {
+  try {
+    const r = await fetch('ofertas.json?t=' + Date.now());
+    ofertas = await r.json();
+    ofertas.sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
+  } catch(e) { ofertas = []; }
+  renderizar();
 }
 
-function selCat(el, cat) {
-  document.querySelectorAll('.cat').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
+function filtrar(el, cat) {
   catActual = cat;
-  hashActual = el.dataset.hashtags;
-  document.getElementById('hashPreview').textContent = hashActual;
-  actualizarPreview();
+  document.querySelectorAll('.filtro').forEach(f => f.classList.remove('active'));
+  el.classList.add('active');
+  renderizar();
 }
 
-async function extraer() {
-  const url = document.getElementById('urlInput').value.trim();
-  if (!url) { mostrarStatus('statusExtraer', 'Pega una URL de Amazon primero', 'err'); return; }
-  const btn = document.getElementById('btnExtraer');
-  btn.disabled = true; btn.textContent = 'Extrayendo...';
-  mostrarStatus('statusExtraer', '<span class="spinner"></span> Accediendo a Amazon...', 'loading');
-  try {
-    const res = await fetch('/extraer', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({url}) });
-    const data = await res.json();
-    if (data.error) { mostrarStatus('statusExtraer', 'Error: ' + data.error, 'err'); }
-    else {
-      document.getElementById('titleInput').value = data.titulo || '';
-      document.getElementById('priceInput').value = data.precio || '';
-      urlAfiliado = data.url || url;
-      imagenUrl = data.imagen || '';
-      if (imagenUrl) {
-        document.getElementById('prodImg').src = imagenUrl;
-        document.getElementById('prodImg').style.display = 'block';
-        document.getElementById('imgPlaceholder').style.display = 'none';
-      }
-      autoSelCat(data.categoria);
-      actualizarPreview();
-      mostrarStatus('statusExtraer', 'Informacion extraida correctamente', 'ok');
-    }
-  } catch(e) { mostrarStatus('statusExtraer', 'Error de conexion', 'err'); }
-  btn.disabled = false; btn.textContent = 'Extraer info';
+function renderizar() {
+  const f = catActual === 'todos' ? ofertas : ofertas.filter(o => o.categoria === catActual);
+  document.getElementById('stats').textContent = f.length + ' ofertas disponibles';
+  if (!f.length) {
+    document.getElementById('grid').innerHTML = '<div class="vacio"><div class="ico">🔍</div><p>No hay ofertas en esta categoria todavia</p></div>';
+    return;
+  }
+  document.getElementById('grid').innerHTML = f.map(o => {
+    const fecha = new Date(o.fecha).toLocaleDateString('es-ES', {day:'numeric', month:'short'});
+    return '<div class="card">' +
+      (o.imagen ? '<img src="' + o.imagen + '" alt="' + o.titulo + '" loading="lazy" onerror="this.style.display=\'none\'">' : '') +
+      '<div class="card-body">' +
+      '<span class="cat-badge cat-' + o.categoria + '">' + (CATS[o.categoria] || o.categoria) + '</span>' +
+      '<h3>' + o.titulo + '</h3>' +
+      (o.precio ? '<div class="precio">' + o.precio + '</div>' : '') +
+      '<div class="fecha">' + fecha + '</div>' +
+      '<a href="' + o.url + '" class="btn-comprar" target="_blank" rel="nofollow">Ver oferta en Amazon</a>' +
+      '</div></div>';
+  }).join('');
 }
 
-function autoSelCat(cat) {
-  if (!cat) return;
-  document.querySelectorAll('.cat').forEach(b => {
-    if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + cat + "'")) {
-      b.click();
-    }
-  });
-}
-
-function actualizarPreview() {
-  const titulo = document.getElementById('titleInput').value.trim();
-  const precio = document.getElementById('priceInput').value.trim();
-  const desc = document.getElementById('descInput').value.trim();
-  const url = urlAfiliado || document.getElementById('urlInput').value.trim();
-  const emoji = EMOJIS[catActual] || '🛒';
-  if (!titulo && !url) { document.getElementById('msgPreview').textContent = 'Rellena los campos para ver la vista previa...'; return; }
-  let msg = emoji + ' ' + (titulo || '') + '\n\n';
-  if (precio) msg += '💰 ' + precio + '\n\n';
-  if (desc) msg += desc + '\n\n';
-  if (url) msg += '🛒 ' + url + '\n\n';
-  msg += hashActual;
-  document.getElementById('msgPreview').textContent = msg;
-}
-
-async function publicar() {
-  const url = urlAfiliado || document.getElementById('urlInput').value.trim();
-  if (!url) { mostrarStatus('statusPublicar', 'Pega una URL primero', 'err'); return; }
-  mostrarStatus('statusPublicar', '<span class="spinner"></span> Publicando en Telegram...', 'loading');
-  try {
-    const res = await fetch('/publicar', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(getProductoActual()) });
-    const data = await res.json();
-    if (data.ok) { mostrarStatus('statusPublicar', 'Publicado en @OfertasLoNecesitoYa', 'ok'); limpiarTodo(); }
-    else { mostrarStatus('statusPublicar', 'Error: ' + (data.error || 'desconocido'), 'err'); }
-  } catch(e) { mostrarStatus('statusPublicar', 'Error de conexion', 'err'); }
-}
-
-async function anadirCola() {
-  const url = urlAfiliado || document.getElementById('urlInput').value.trim();
-  if (!url) { mostrarStatus('statusPublicar', 'Pega una URL primero', 'err'); return; }
-  try {
-    const res = await fetch('/cola/anadir', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(getProductoActual()) });
-    const data = await res.json();
-    if (data.ok) {
-      mostrarStatus('statusPublicar', 'Añadido a la cola. Total: ' + data.total + ' productos', 'ok');
-      actualizarBadge(data.total);
-      limpiarTodo();
-    }
-  } catch(e) { mostrarStatus('statusPublicar', 'Error de conexion', 'err'); }
-}
-
-function getProductoActual() {
-  return {
-    titulo: document.getElementById('titleInput').value.trim(),
-    precio: document.getElementById('priceInput').value.trim(),
-    desc: document.getElementById('descInput').value.trim(),
-    url: urlAfiliado || document.getElementById('urlInput').value.trim(),
-    categoria: catActual,
-    imagen: imagenUrl
-  };
-}
-
-async function cargarCola() {
-  try {
-    const res = await fetch('/cola');
-    const cola = await res.json();
-    actualizarBadge(cola.length);
-    const el = document.getElementById('listaColaEl');
-    if (!cola.length) {
-      el.innerHTML = '<div class="cola-vacia"><div class="ico">📭</div><p>La cola esta vacia. Añade productos desde la pestaña "Publicar ahora".</p></div>';
-      return;
-    }
-    el.innerHTML = cola.map((p, i) => 
-      '<div class="cola-item">' +
-      (p.imagen ? '<img src="' + p.imagen + '" onerror="this.style.display=\'none\'">' : '') +
-      '<div class="cola-item-info">' +
-      '<div class="cola-item-titulo">' + (p.titulo || p.url) + '</div>' +
-      '<div class="cola-item-meta">' + (EMOJIS[p.categoria] || '') + ' ' + p.categoria + (p.precio ? ' · ' + p.precio : '') + '</div>' +
-      '</div>' +
-      '<button class="btn-eliminar" onclick="eliminarCola(' + i + ')">Eliminar</button>' +
-      '</div>'
-    ).join('');
-  } catch(e) {}
-}
-
-async function eliminarCola(idx) {
-  await fetch('/cola/eliminar', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({index: idx}) });
-  cargarCola();
-}
-
-function actualizarBadge(n) {
-  document.getElementById('colaBadge').textContent = 'Cola: ' + n;
-  document.getElementById('colaBadge2').textContent = n + ' productos';
-}
-
-function mostrarStatus(id, msg, tipo) {
-  const el = document.getElementById(id);
-  el.innerHTML = msg;
-  el.className = 'status ' + tipo;
-}
-
-function limpiarTodo() {
-  ['urlInput','titleInput','priceInput','descInput'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('msgPreview').textContent = 'Rellena los campos para ver la vista previa...';
-  document.getElementById('prodImg').style.display = 'none';
-  document.getElementById('imgPlaceholder').style.display = 'flex';
-  document.getElementById('statusExtraer').className = 'status';
-  document.getElementById('statusPublicar').className = 'status';
-  urlAfiliado = ''; imagenUrl = '';
-}
-
-fetch('/cola').then(r => r.json()).then(c => actualizarBadge(c.length)).catch(()=>{});
+cargarOfertas();
 </script>
 </body>
 </html>

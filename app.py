@@ -7,8 +7,10 @@ import json
 import json
 import base64
 from datetime import datetime
+from programador import COLA_LOCK, iniciar_programador
 
-BASE_DIR = os.getcwd()
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.environ.get('DATA_DIR', BASE_DIR)
 app = Flask(__name__)
 
 BOT_TOKEN = os.environ.get('BOT_TOKEN', '')
@@ -159,13 +161,13 @@ def extraer():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-COLA_FILE = os.path.join(BASE_DIR, 'cola.json')
+COLA_FILE = os.path.join(DATA_DIR, 'cola.json')
 
 def leer_cola():
     try:
         with open(COLA_FILE, 'r', encoding='utf-8') as f:
             return json.load(f)
-    except:
+    except FileNotFoundError:
         return []
 
 def guardar_cola(cola):
@@ -174,24 +176,27 @@ def guardar_cola(cola):
 
 @app.route('/cola', methods=['GET'])
 def ver_cola():
-    return jsonify(leer_cola())
+    with COLA_LOCK:
+        return jsonify(leer_cola())
 
 @app.route('/cola/anadir', methods=['POST'])
 def anadir_cola():
     data = request.json
-    cola = leer_cola()
-    cola.append(data)
-    guardar_cola(cola)
+    with COLA_LOCK:
+        cola = leer_cola()
+        cola.append(data)
+        guardar_cola(cola)
     return jsonify({'ok': True, 'total': len(cola)})
 
 @app.route('/cola/eliminar', methods=['POST'])
 def eliminar_cola():
     data = request.json
     idx = data.get('index', -1)
-    cola = leer_cola()
-    if 0 <= idx < len(cola):
-        cola.pop(idx)
-        guardar_cola(cola)
+    with COLA_LOCK:
+        cola = leer_cola()
+        if 0 <= idx < len(cola):
+            cola.pop(idx)
+            guardar_cola(cola)
     return jsonify({'ok': True, 'total': len(cola)})
 
 @app.route('/publicar', methods=['POST'])
@@ -246,6 +251,9 @@ def publicar():
         return jsonify({'ok': True})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+if os.environ.get('RUN_SCHEDULER', '').lower() in ('1', 'true', 'yes'):
+    iniciar_programador()
 
 if __name__ == '__main__':
     print('Bot iniciado en http://127.0.0.1:8080')

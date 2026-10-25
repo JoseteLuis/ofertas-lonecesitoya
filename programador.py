@@ -3,6 +3,7 @@ import time
 import requests
 import json
 import base64
+import threading
 from datetime import datetime
 
 import os
@@ -12,7 +13,15 @@ GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN', '')
 GITHUB_USER = os.environ.get('GITHUB_USER', 'JoseteLuis')
 GITHUB_REPO = os.environ.get('GITHUB_REPO', 'ofertas-lonecesitoya')
 GITHUB_FILE = 'ofertas.json'
-COLA_FILE = 'cola.json'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.environ.get('DATA_DIR', BASE_DIR)
+COLA_FILE = os.path.join(DATA_DIR, 'cola.json')
+HORAS_PUBLICACION = (
+    '09:00', '10:20', '11:40', '13:00', '14:20',
+    '15:40', '17:00', '18:20', '19:40', '21:00'
+)
+_programador_iniciado = False
+COLA_LOCK = threading.Lock()
 
 CATEGORIAS = {
     'hogar':      {'hashtags': '#hogar #casa #amazon #oferta #decoracion',        'emoji': '\U0001f3e0'},
@@ -26,7 +35,7 @@ def leer_cola():
     try:
         with open(COLA_FILE, 'r', encoding='utf-8') as f:
             return json.load(f)
-    except:
+    except FileNotFoundError:
         return []
 
 def guardar_cola(cola):
@@ -85,7 +94,10 @@ def publicar_producto(producto):
             )
         if r.json().get('ok'):
             oferta = {**producto, 'fecha': datetime.now().isoformat()}
-            guardar_en_github(oferta)
+            try:
+                guardar_en_github(oferta)
+            except Exception as e:
+                print('[ERROR Historial GitHub] ' + str(e))
             print('[OK] ' + titulo[:60])
             return True
         else:
@@ -97,32 +109,62 @@ def publicar_producto(producto):
 
 def publicacion_automatica():
     print('\n[' + datetime.now().strftime('%d/%m/%Y %H:%M') + '] Iniciando publicacion automatica...')
-    cola = leer_cola()
+    with COLA_LOCK:
+        try:
+            cola = leer_cola()
+        except (OSError, json.JSONDecodeError) as e:
+            print('[ERROR Cola] ' + str(e))
+            return
 
-    if not cola:
-        print('[INFO] Cola vacia, no hay productos para publicar')
-        return
+        if not cola:
+            print('[INFO] Cola vacia, no hay productos para publicar')
+            return
 
-    productos_sesion = cola[:5]
-    cola_restante = cola[5:]
+        if not publicar_producto(cola[0]):
+            cola.append(cola.pop(0))
+            try:
+                guardar_cola(cola)
+            except OSError as e:
+                print('[ERROR Cola] No se pudo reordenar el producto fallido: ' + str(e))
+                return
+            print('[INFO] El producto fallido permanece al final de la cola para reintentar.')
+            return
 
-    publicados = 0
-    for producto in productos_sesion:
-        ok = publicar_producto(producto)
-        if ok:
-            publicados += 1
+        cola.pop(0)
+        try:
+            guardar_cola(cola)
+        except OSError as e:
+            print('[ERROR Cola] Telegram publico el producto, pero no se pudo actualizar la cola: ' + str(e))
+            return
+
+        print('[FIN] Publicado 1 producto. Quedan ' + str(len(cola)) + ' en cola.')
+
+def _bucle_programador():
+    while True:
+        try:
+            schedule.run_pending()
+        except Exception as e:
+            print('[ERROR Programador] ' + str(e))
         time.sleep(15)
 
-    guardar_cola(cola_restante)
-    print('[FIN] Publicados ' + str(publicados) + ' productos. Quedan ' + str(len(cola_restante)) + ' en cola.')
+def iniciar_programador():
+    global _programador_iniciado
+    if _programador_iniciado:
+        return
 
-schedule.every().day.at('09:00').do(publicacion_automatica)
-schedule.every().day.at('14:00').do(publicacion_automatica)
-schedule.every().day.at('21:00').do(publicacion_automatica)
+    schedule.clear('telegram')
+    for hora in HORAS_PUBLICACION:
+        schedule.every().day.at(hora, 'Europe/Madrid').do(publicacion_automatica).tag('telegram')
 
-print('Programador iniciado. Publicaciones a las 09:00, 14:00 y 21:00')
-print('Productos en cola: ' + str(len(leer_cola())))
+    hilo = threading.Thread(target=_bucle_programador, name='programador-telegram', daemon=True)
+    hilo.start()
+    _programador_iniciado = True
+    print('[INFO] Programador de Telegram activo: ' + ', '.join(HORAS_PUBLICACION))
+    try:
+        print('[INFO] Productos en cola: ' + str(len(leer_cola())))
+    except (OSError, json.JSONDecodeError) as e:
+        print('[ERROR Cola] ' + str(e))
 
-while True:
-    schedule.run_pending()
-    time.sleep(30)
+if __name__ == '__main__':
+    iniciar_programador()
+    _bucle_programador()

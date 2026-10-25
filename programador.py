@@ -43,6 +43,19 @@ def guardar_cola(cola):
         json.dump(cola, f, ensure_ascii=False, indent=2)
 
 def guardar_en_github(oferta):
+    if os.environ.get('GITHUB_ACTIONS') == 'true':
+        ofertas_path = os.path.join(BASE_DIR, GITHUB_FILE)
+        try:
+            with open(ofertas_path, 'r', encoding='utf-8') as f:
+                contenido = json.load(f)
+        except FileNotFoundError:
+            contenido = []
+
+        contenido.insert(0, oferta)
+        with open(ofertas_path, 'w', encoding='utf-8') as f:
+            json.dump(contenido[:500], f, ensure_ascii=False, indent=2)
+        return
+
     headers = {
         'Authorization': 'token ' + GITHUB_TOKEN,
         'Accept': 'application/vnd.github.v3+json'
@@ -53,16 +66,19 @@ def guardar_en_github(oferta):
         data = r.json()
         sha = data['sha']
         contenido = json.loads(base64.b64decode(data['content']).decode('utf-8'))
-    else:
+    elif r.status_code == 404:
         sha = None
         contenido = []
+    else:
+        r.raise_for_status()
     contenido.insert(0, oferta)
     contenido = contenido[:500]
     nuevo = base64.b64encode(json.dumps(contenido, ensure_ascii=False, indent=2).encode('utf-8')).decode('utf-8')
     payload = {'message': 'Oferta: ' + oferta.get('titulo', '')[:50], 'content': nuevo}
     if sha:
         payload['sha'] = sha
-    requests.put(api_url, headers=headers, json=payload)
+    respuesta = requests.put(api_url, headers=headers, json=payload)
+    respuesta.raise_for_status()
 
 def publicar_producto(producto):
     cat = CATEGORIAS.get(producto.get('categoria', 'hogar'), CATEGORIAS['hogar'])

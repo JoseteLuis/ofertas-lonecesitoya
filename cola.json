@@ -1,13 +1,5 @@
 [
   {
-    "titulo": "XIAOMI POCO X8 Pro - Smartphone de 8+256GB, Dimensity 8500-Ultra, batería de 6500 mAh, Sensor Sony IMX882 de 50MP con OIS, 1 año de garantía Extra, Cargador no Incluido, Negro (Versión ES) | 50MP Cam, 2511FPC34G",
-    "precio": "329,99€",
-    "desc": "",
-    "url": "https://amzn.to/4vffqD8?tag=lonecesitoya-21",
-    "categoria": "tecnologia",
-    "imagen": "https://m.media-amazon.com/images/I/61y4EbOMaIL._AC_SX679_.jpg"
-  },
-  {
     "titulo": "GPS Coche localizador 2026 Magnético Rastreador GPSLocalizador GPS para Coche Rastreador(Compatible con Android e iOS) Seguimiento en Tiempo Real para vehículo,Auto/Motocicletas,Sin Suscripción",
     "precio": "29,98€",
     "desc": "",
@@ -94,5 +86,13 @@
     "url": "https://amzn.to/4xrOkKg?tag=lonecesitoya-21",
     "categoria": "hogar",
     "imagen": "https://m.media-amazon.com/images/I/81zuUMQQqBL._AC_SX569_.jpg"
+  },
+  {
+    "titulo": "XIAOMI POCO X8 Pro - Smartphone de 8+256GB, Dimensity 8500-Ultra, batería de 6500 mAh, Sensor Sony IMX882 de 50MP con OIS, 1 año de garantía Extra, Cargador no Incluido, Negro (Versión ES) | 50MP Cam, 2511FPC34G",
+    "precio": "329,99€",
+    "desc": "",
+    "url": "https://amzn.to/4vffqD8?tag=lonecesitoya-21",
+    "categoria": "tecnologia",
+    "imagen": "https://m.media-amazon.com/images/I/61y4EbOMaIL._AC_SX679_.jpg"
   }
 ]

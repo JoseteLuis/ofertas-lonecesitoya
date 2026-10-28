@@ -1,13 +1,5 @@
 [
   {
-    "titulo": "Adaptador Enchufe Universal, 2 USB-C y 1 USB-A Adaptador de Viaje, AC Adaptador Universal para EU, Reino Unido, Americano, Canadá, Australia& 224+País(Negro)",
-    "precio": "13,99€",
-    "desc": "",
-    "url": "https://amzn.to/3QEUKoQ?tag=lonecesitoya-21",
-    "categoria": "tecnologia",
-    "imagen": "https://m.media-amazon.com/images/I/613NgtY-tuL._AC_SX679_.jpg"
-  },
-  {
     "titulo": "2026 Nuevo Español TDT Decodificador TV DVB-T T2 H265 HEVC FTA Full HD PVR, USB, HDMI, SCART, Sintonizador de TV Digital Terrestre, Receptor Digital de Alta definición Full HD 1080p (3)",
     "precio": "20,95€",
     "desc": "",
@@ -94,5 +86,13 @@
     "url": "https://amzn.to/4oq4W15?tag=lonecesitoya-21",
     "categoria": "tecnologia",
     "imagen": "https://m.media-amazon.com/images/I/71gy8utiRpL._AC_SX679_.jpg"
+  },
+  {
+    "titulo": "Adaptador Enchufe Universal, 2 USB-C y 1 USB-A Adaptador de Viaje, AC Adaptador Universal para EU, Reino Unido, Americano, Canadá, Australia& 224+País(Negro)",
+    "precio": "13,99€",
+    "desc": "",
+    "url": "https://amzn.to/3QEUKoQ?tag=lonecesitoya-21",
+    "categoria": "tecnologia",
+    "imagen": "https://m.media-amazon.com/images/I/613NgtY-tuL._AC_SX679_.jpg"
   }
 ]

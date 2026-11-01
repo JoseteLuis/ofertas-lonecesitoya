@@ -248,8 +248,11 @@ def publicar_producto(
                         json={'chat_id': CHAT_ID, 'text': mensaje, 'parse_mode': 'Markdown'},
                         timeout=10
                     )
-                respuesta.raise_for_status()
-                resultado = respuesta.json()
+                try:
+                    resultado = respuesta.json()
+                except ValueError:
+                    respuesta.raise_for_status()
+                    raise
                 if not isinstance(resultado, dict) or not resultado.get('ok'):
                     raise ValueError(
                         resultado.get('description', resultado)

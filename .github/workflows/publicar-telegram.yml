@@ -1,4 +1,4 @@
-name: Publicar ofertas en Telegram
+name: Publicar ofertas en Telegram, Facebook e Instagram
 
 on:
   schedule:
@@ -8,7 +8,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: ofertas-telegram-cola
+  group: ofertas-redes-cola
   cancel-in-progress: false
 
 jobs:
@@ -28,8 +28,12 @@ jobs:
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
+          META_PAGE_ID: ${{ secrets.META_PAGE_ID }}
+          META_PAGE_ACCESS_TOKEN: ${{ secrets.META_PAGE_ACCESS_TOKEN }}
+          META_INSTAGRAM_ACCOUNT_ID: ${{ secrets.META_INSTAGRAM_ACCOUNT_ID }}
           GITHUB_ACTIONS: 'true'
       - name: Guardar cola e historial
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

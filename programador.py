@@ -9,6 +9,10 @@ from datetime import datetime
 import os
 BOT_TOKEN = os.environ.get('BOT_TOKEN', '')
 CHAT_ID = os.environ.get('CHAT_ID', '')
+META_PAGE_ID = os.environ.get('META_PAGE_ID', '')
+META_PAGE_ACCESS_TOKEN = os.environ.get('META_PAGE_ACCESS_TOKEN', '')
+META_INSTAGRAM_ACCOUNT_ID = os.environ.get('META_INSTAGRAM_ACCOUNT_ID', '')
+META_GRAPH_API_VERSION = os.environ.get('META_GRAPH_API_VERSION', 'v26.0')
 GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN', '')
 GITHUB_USER = os.environ.get('GITHUB_USER', 'JoseteLuis')
 GITHUB_REPO = os.environ.get('GITHUB_REPO', 'ofertas-lonecesitoya')
@@ -80,7 +84,113 @@ def guardar_en_github(oferta):
     respuesta = requests.put(api_url, headers=headers, json=payload)
     respuesta.raise_for_status()
 
-def publicar_producto(producto):
+def _canales_meta():
+    if META_PAGE_ID and not META_PAGE_ACCESS_TOKEN:
+        raise ValueError('META_PAGE_ID requiere META_PAGE_ACCESS_TOKEN.')
+    if META_INSTAGRAM_ACCOUNT_ID and not META_PAGE_ACCESS_TOKEN:
+        raise ValueError('META_INSTAGRAM_ACCOUNT_ID requiere META_PAGE_ACCESS_TOKEN.')
+    if META_PAGE_ACCESS_TOKEN and not (META_PAGE_ID or META_INSTAGRAM_ACCOUNT_ID):
+        raise ValueError('META_PAGE_ACCESS_TOKEN requiere un ID de página o de Instagram.')
+
+    canales = []
+    if META_PAGE_ID:
+        canales.append('facebook')
+    if META_INSTAGRAM_ACCOUNT_ID:
+        canales.append('instagram')
+    return canales
+
+def _respuesta_meta(respuesta):
+    try:
+        resultado = respuesta.json()
+    except ValueError:
+        respuesta.raise_for_status()
+        raise
+    if isinstance(resultado, dict) and resultado.get('error'):
+        detalle = resultado['error']
+        if isinstance(detalle, dict):
+            raise ValueError(detalle.get('message', 'Error de Meta Graph API'))
+        raise ValueError(str(detalle))
+    respuesta.raise_for_status()
+    if not isinstance(resultado, dict):
+        raise ValueError('Meta devolvió una respuesta inesperada.')
+    return resultado
+
+def _publicar_facebook(mensaje, url, imagen):
+    endpoint = 'https://graph.facebook.com/' + META_GRAPH_API_VERSION + '/' + META_PAGE_ID
+    if imagen.startswith('https://'):
+        endpoint += '/photos'
+        datos = {'url': imagen, 'caption': mensaje}
+    else:
+        endpoint += '/feed'
+        datos = {'message': mensaje}
+        if url:
+            datos['link'] = url
+    datos['access_token'] = META_PAGE_ACCESS_TOKEN
+    resultado = _respuesta_meta(requests.post(endpoint, data=datos, timeout=30))
+    if not resultado.get('id'):
+        raise ValueError('Meta no confirmó la publicación en Facebook.')
+
+def _publicar_instagram(mensaje, imagen):
+    if not imagen.startswith('https://'):
+        raise ValueError('Instagram requiere una URL HTTPS pública para la imagen.')
+    if len(mensaje) > 2200:
+        raise ValueError('El texto supera el límite de 2200 caracteres de Instagram.')
+
+    base_url = (
+        'https://graph.facebook.com/' + META_GRAPH_API_VERSION + '/'
+        + META_INSTAGRAM_ACCOUNT_ID
+    )
+    contenedor = _respuesta_meta(requests.post(
+        base_url + '/media',
+        data={
+            'image_url': imagen,
+            'caption': mensaje,
+            'access_token': META_PAGE_ACCESS_TOKEN
+        },
+        timeout=30
+    ))
+    contenedor_id = contenedor.get('id')
+    if not contenedor_id:
+        raise ValueError('Meta no devolvió el identificador de la publicación de Instagram.')
+
+    estado = ''
+    for intento in range(30):
+        estado_respuesta = _respuesta_meta(requests.get(
+            'https://graph.facebook.com/' + META_GRAPH_API_VERSION + '/' + contenedor_id,
+            params={
+                'fields': 'status_code',
+                'access_token': META_PAGE_ACCESS_TOKEN
+            },
+            timeout=15
+        ))
+        estado = estado_respuesta.get('status_code', '')
+        if estado == 'FINISHED':
+            break
+        if estado == 'ERROR':
+            raise ValueError('Meta no pudo procesar la imagen de Instagram.')
+        if intento < 29:
+            time.sleep(2)
+    else:
+        raise TimeoutError('Meta tardó demasiado en procesar la imagen de Instagram.')
+
+    publicado = _respuesta_meta(requests.post(
+        base_url + '/media_publish',
+        data={
+            'creation_id': contenedor_id,
+            'access_token': META_PAGE_ACCESS_TOKEN
+        },
+        timeout=30
+    ))
+    if not publicado.get('id'):
+        raise ValueError('Meta no confirmó la publicación en Instagram.')
+
+def publicar_producto(
+    producto,
+    mensaje_extra='',
+    canales_publicados=None,
+    guardar_progreso=None,
+    guardar_historial=True
+):
     cat = CATEGORIAS.get(producto.get('categoria', 'hogar'), CATEGORIAS['hogar'])
     emoji = cat['emoji']
     hashtags = cat['hashtags']
@@ -88,40 +198,91 @@ def publicar_producto(producto):
     precio = producto.get('precio', '')
     url = producto.get('url', '')
     imagen = producto.get('imagen', '')
+    canales_publicados = canales_publicados if canales_publicados is not None else set()
+
+    try:
+        canales_meta = _canales_meta()
+    except ValueError as e:
+        print('[ERROR Meta configuración] ' + str(e))
+        return False
+
+    partes_sociales = [emoji + ' ' + titulo if titulo else emoji]
+    if precio:
+        partes_sociales.append('\U0001f4b0 ' + precio)
+    if mensaje_extra:
+        partes_sociales.append(mensaje_extra)
+    if url:
+        partes_sociales.append('\U0001f6d2 ' + url)
+    partes_sociales.append(hashtags)
+    mensaje_social = '\n\n'.join(partes_sociales)
+    if 'instagram' in canales_meta and not imagen.startswith('https://'):
+        print('[ERROR Instagram] Se necesita una imagen con URL HTTPS pública.')
+        return False
+    if 'instagram' in canales_meta and len(mensaje_social) > 2200:
+        print('[ERROR Instagram] El texto supera el límite de 2200 caracteres.')
+        return False
 
     mensaje = emoji + ' *' + titulo + '*\n\n' if titulo else emoji + '\n\n'
     if precio:
         mensaje += '\U0001f4b0 *' + precio + '*\n\n'
+    if mensaje_extra:
+        mensaje += mensaje_extra + '\n\n'
     mensaje += '\U0001f6d2 ' + url + '\n\n'
     mensaje += hashtags
 
-    try:
-        if imagen and imagen.startswith('http'):
-            r = requests.post(
-                'https://api.telegram.org/bot' + BOT_TOKEN + '/sendPhoto',
-                json={'chat_id': CHAT_ID, 'photo': imagen, 'caption': mensaje, 'parse_mode': 'Markdown'},
-                timeout=10
-            )
-        else:
-            r = requests.post(
-                'https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage',
-                json={'chat_id': CHAT_ID, 'text': mensaje, 'parse_mode': 'Markdown'},
-                timeout=10
-            )
-        if r.json().get('ok'):
-            oferta = {**producto, 'fecha': datetime.now().isoformat()}
-            try:
-                guardar_en_github(oferta)
-            except Exception as e:
-                print('[ERROR Historial GitHub] ' + str(e))
-            print('[OK] ' + titulo[:60])
-            return True
-        else:
-            print('[ERROR Telegram] ' + str(r.json()))
+    canales = ['telegram'] + canales_meta
+    for canal in canales:
+        if canal in canales_publicados:
+            continue
+        try:
+            if canal == 'telegram':
+                if imagen and imagen.startswith('http'):
+                    respuesta = requests.post(
+                        'https://api.telegram.org/bot' + BOT_TOKEN + '/sendPhoto',
+                        json={'chat_id': CHAT_ID, 'photo': imagen, 'caption': mensaje, 'parse_mode': 'Markdown'},
+                        timeout=10
+                    )
+                else:
+                    respuesta = requests.post(
+                        'https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage',
+                        json={'chat_id': CHAT_ID, 'text': mensaje, 'parse_mode': 'Markdown'},
+                        timeout=10
+                    )
+                respuesta.raise_for_status()
+                resultado = respuesta.json()
+                if not isinstance(resultado, dict) or not resultado.get('ok'):
+                    raise ValueError(
+                        resultado.get('description', resultado)
+                        if isinstance(resultado, dict) else resultado
+                    )
+            elif canal == 'facebook':
+                _publicar_facebook(mensaje_social, url, imagen)
+            else:
+                _publicar_instagram(mensaje_social, imagen)
+        except (requests.RequestException, ValueError, KeyError, TimeoutError) as e:
+            print('[ERROR ' + canal.capitalize() + '] ' + str(e))
             return False
-    except Exception as e:
-        print('[ERROR] ' + str(e))
-        return False
+
+        canales_publicados.add(canal)
+        if guardar_progreso:
+            try:
+                guardar_progreso(canal)
+            except OSError as e:
+                print('[ERROR Cola] No se pudo guardar el progreso de ' + canal + ': ' + str(e))
+                return False
+
+    if guardar_historial:
+        oferta = {
+            key: value for key, value in producto.items()
+            if key != '_publicado_en'
+        }
+        oferta['fecha'] = datetime.now().isoformat()
+        try:
+            guardar_en_github(oferta)
+        except Exception as e:
+            print('[ERROR Historial GitHub] ' + str(e))
+    print('[OK] ' + titulo[:60] + ' (' + ', '.join(canales) + ')')
+    return True
 
 def publicacion_automatica():
     print('\n[' + datetime.now().strftime('%d/%m/%Y %H:%M') + '] Iniciando publicacion automatica...')
@@ -130,30 +291,44 @@ def publicacion_automatica():
             cola = leer_cola()
         except (OSError, json.JSONDecodeError) as e:
             print('[ERROR Cola] ' + str(e))
-            return
+            return False
 
         if not cola:
             print('[INFO] Cola vacia, no hay productos para publicar')
-            return
+            return None
 
-        if not publicar_producto(cola[0]):
+        producto = cola[0]
+        producto.setdefault('_publicado_en', [])
+
+        def guardar_progreso(canal):
+            if canal not in producto['_publicado_en']:
+                producto['_publicado_en'].append(canal)
+            guardar_cola(cola)
+
+        canales_publicados = set(producto['_publicado_en'])
+        if not publicar_producto(
+            producto,
+            canales_publicados=canales_publicados,
+            guardar_progreso=guardar_progreso
+        ):
             cola.append(cola.pop(0))
             try:
                 guardar_cola(cola)
             except OSError as e:
-                print('[ERROR Cola] No se pudo reordenar el producto fallido: ' + str(e))
-                return
-            print('[INFO] El producto fallido permanece al final de la cola para reintentar.')
-            return
+                print('[ERROR Cola] No se pudo guardar el progreso de la publicacion: ' + str(e))
+                return False
+            print('[INFO] El producto permanece en la cola; los canales ya publicados no se repetirán.')
+            return False
 
         cola.pop(0)
         try:
             guardar_cola(cola)
         except OSError as e:
-            print('[ERROR Cola] Telegram publico el producto, pero no se pudo actualizar la cola: ' + str(e))
-            return
+            print('[ERROR Cola] Se publico el producto, pero no se pudo actualizar la cola: ' + str(e))
+            return True
 
         print('[FIN] Publicado 1 producto. Quedan ' + str(len(cola)) + ' en cola.')
+        return True
 
 def _bucle_programador():
     while True:
@@ -168,14 +343,14 @@ def iniciar_programador():
     if _programador_iniciado:
         return
 
-    schedule.clear('telegram')
+    schedule.clear('publicaciones')
     for hora in HORAS_PUBLICACION:
-        schedule.every().day.at(hora, 'Europe/Madrid').do(publicacion_automatica).tag('telegram')
+        schedule.every().day.at(hora, 'Europe/Madrid').do(publicacion_automatica).tag('publicaciones')
 
-    hilo = threading.Thread(target=_bucle_programador, name='programador-telegram', daemon=True)
+    hilo = threading.Thread(target=_bucle_programador, name='programador-publicaciones', daemon=True)
     hilo.start()
     _programador_iniciado = True
-    print('[INFO] Programador de Telegram activo: ' + ', '.join(HORAS_PUBLICACION))
+    print('[INFO] Programador de publicaciones activo: ' + ', '.join(HORAS_PUBLICACION))
     try:
         print('[INFO] Productos en cola: ' + str(len(leer_cola())))
     except (OSError, json.JSONDecodeError) as e:

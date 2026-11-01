@@ -6,8 +6,10 @@ import os
 import json
 import json
 import base64
+import hashlib
+import threading
 from datetime import datetime
-from programador import COLA_LOCK, iniciar_programador
+from programador import COLA_LOCK, iniciar_programador, publicar_producto
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.environ.get('DATA_DIR', BASE_DIR)
@@ -20,6 +22,35 @@ GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN', '')
 GITHUB_USER = os.environ.get('GITHUB_USER', 'JoseteLuis')
 GITHUB_REPO = os.environ.get('GITHUB_REPO', 'ofertas-lonecesitoya')
 GITHUB_FILE = 'ofertas.json'
+
+def describir_error_github(error):
+    respuesta = getattr(error, 'response', None)
+    if respuesta is None:
+        return str(error)
+
+    try:
+        detalle = respuesta.json().get('message')
+    except ValueError:
+        detalle = None
+
+    if respuesta.status_code == 401:
+        return 'GitHub rechazo el token. Comprueba que sea valido y no haya caducado.'
+    if respuesta.status_code == 403:
+        if detalle:
+            return (
+                'GitHub denego el acceso. Comprueba el acceso al repositorio '
+                'y el permiso Contents: Read and write del token. Respuesta de GitHub: '
+                + detalle
+            )
+        return 'GitHub denego el acceso. El token necesita permiso Contents: Read and write.'
+    if respuesta.status_code == 404:
+        return (
+            'GitHub no encontro el repositorio o el archivo. Comprueba el acceso al '
+            'repositorio JoseteLuis/ofertas-lonecesitoya.'
+            + ((' Respuesta de GitHub: ' + detalle) if detalle else '')
+        )
+
+    return detalle or str(error)
 
 CATEGORIAS = {
     'hogar': {
@@ -110,20 +141,27 @@ def extraer_producto(url):
         return titulo, precio, imagen
 
 def guardar_en_github(oferta):
+    github_token = os.environ.get('GITHUB_TOKEN', '').strip()
+    if not github_token:
+        print('[ERROR Historial GitHub] Falta configurar GITHUB_TOKEN.')
+        return False
+
     headers = {
-        'Authorization': 'token ' + GITHUB_TOKEN,
+        'Authorization': 'Bearer ' + github_token,
         'Accept': 'application/vnd.github.v3+json'
     }
     api_url = 'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + GITHUB_FILE
 
-    r = requests.get(api_url, headers=headers)
+    r = requests.get(api_url, headers=headers, timeout=15)
     if r.status_code == 200:
         data = r.json()
         sha = data['sha']
         contenido = json.loads(base64.b64decode(data['content']).decode('utf-8'))
-    else:
+    elif r.status_code == 404:
         sha = None
         contenido = []
+    else:
+        r.raise_for_status()
 
     contenido.insert(0, oferta)
     contenido = contenido[:500]
@@ -137,7 +175,8 @@ def guardar_en_github(oferta):
     if sha:
         payload['sha'] = sha
 
-    r2 = requests.put(api_url, headers=headers, json=payload)
+    r2 = requests.put(api_url, headers=headers, json=payload, timeout=15)
+    r2.raise_for_status()
     return r2.status_code in [200, 201]
 
 @app.route('/')
@@ -162,6 +201,8 @@ def extraer():
         return jsonify({'error': str(e)}), 500
 
 COLA_FILE = os.path.join(DATA_DIR, 'cola.json')
+PUBLICACIONES_MANUALES_FILE = os.path.join(DATA_DIR, 'publicaciones_manuales.json')
+PUBLICACIONES_MANUALES_LOCK = threading.Lock()
 
 def leer_cola():
     try:
@@ -173,6 +214,18 @@ def leer_cola():
 def guardar_cola(cola):
     with open(COLA_FILE, 'w', encoding='utf-8') as f:
         json.dump(cola, f, ensure_ascii=False, indent=2)
+
+def leer_publicaciones_manuales():
+    try:
+        with open(PUBLICACIONES_MANUALES_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+
+def guardar_publicaciones_manuales(publicaciones):
+    publicaciones = dict(list(publicaciones.items())[-500:])
+    with open(PUBLICACIONES_MANUALES_FILE, 'w', encoding='utf-8') as f:
+        json.dump(publicaciones, f, ensure_ascii=False, indent=2)
 
 @app.route('/cola', methods=['GET'])
 def ver_cola():
@@ -201,42 +254,92 @@ def eliminar_cola():
 
 @app.route('/publicar', methods=['POST'])
 def publicar():
-    data = request.json
-    titulo = data.get('titulo', '')
-    precio = data.get('precio', '')
-    desc = data.get('desc', '')
-    url = data.get('url', '')
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({'error': 'La solicitud no contiene datos JSON válidos.'}), 400
+
+    titulo = data.get('titulo', '').strip()
+    precio = data.get('precio', '').strip()
+    desc = data.get('desc', '').strip()
+    url = data.get('url', '').strip()
     categoria = data.get('categoria', 'hogar')
-    imagen = data.get('imagen', '')
-    cat = CATEGORIAS.get(categoria, CATEGORIAS['hogar'])
-    emoji = cat['emoji']
-    hashtags = cat['hashtags']
+    imagen = data.get('imagen', '').strip()
 
-    if titulo:
-        mensaje = emoji + ' *' + titulo + '*\n\n'
-    else:
-        mensaje = emoji + '\n\n'
-    if precio:
-        mensaje += '\U0001f4b0 *' + precio + '*\n\n'
-    if desc:
-        mensaje += desc + '\n\n'
-    mensaje += '\U0001f6d2 ' + url + '\n\n'
-    mensaje += hashtags
+    if not titulo or not url:
+        return jsonify({'error': 'El título y la URL del producto son obligatorios.'}), 400
+    if not BOT_TOKEN or not CHAT_ID:
+        return jsonify({
+            'error': 'Faltan BOT_TOKEN o CHAT_ID. Configúralos en el entorno antes de iniciar app.py.'
+        }), 503
 
-    try:
-        if imagen and imagen.startswith('http'):
-            r = requests.post(
-                'https://api.telegram.org/bot' + BOT_TOKEN + '/sendPhoto',
-                json={'chat_id': CHAT_ID, 'photo': imagen, 'caption': mensaje, 'parse_mode': 'Markdown'}
-            )
-        else:
-            r = requests.post(
-                'https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage',
-                json={'chat_id': CHAT_ID, 'text': mensaje, 'parse_mode': 'Markdown', 'disable_web_page_preview': False}
-            )
-        result = r.json()
-        if not result.get('ok'):
-            return jsonify({'error': result.get('description', 'Error Telegram')}), 500
+    publicacion_id = data.get('publicacion_id', '')
+    if (
+        not isinstance(publicacion_id, str)
+        or not publicacion_id.strip()
+        or len(publicacion_id) > 128
+    ):
+        return jsonify({'error': 'Falta el identificador de esta publicación. Recarga el panel e inténtalo de nuevo.'}), 400
+
+    producto = {
+        'titulo': titulo,
+        'precio': precio,
+        'url': url,
+        'imagen': imagen,
+        'categoria': categoria
+    }
+    huella = hashlib.sha256(json.dumps(
+        {'producto': producto, 'desc': desc},
+        sort_keys=True,
+        ensure_ascii=False
+    ).encode('utf-8')).hexdigest()
+
+    with PUBLICACIONES_MANUALES_LOCK:
+        publicaciones = leer_publicaciones_manuales()
+        estado = publicaciones.get(publicacion_id, {})
+        if estado and estado.get('huella') != huella:
+            return jsonify({
+                'error': 'Este identificador ya pertenece a otro contenido. Inicia una nueva publicación.'
+            }), 409
+        if estado.get('completada'):
+            return jsonify({
+                'ok': True,
+                'canales_publicados': estado.get('canales_publicados', [])
+            })
+
+        canales_publicados = set(estado.get('canales_publicados', []))
+        publicaciones[publicacion_id] = {
+            'huella': huella,
+            'canales_publicados': sorted(canales_publicados),
+            'completada': False,
+            'actualizada': datetime.now().isoformat()
+        }
+        guardar_publicaciones_manuales(publicaciones)
+
+        def guardar_progreso(canal):
+            canales_publicados.add(canal)
+            publicaciones[publicacion_id] = {
+                'huella': huella,
+                'canales_publicados': sorted(canales_publicados),
+                'completada': False,
+                'actualizada': datetime.now().isoformat()
+            }
+            guardar_publicaciones_manuales(publicaciones)
+
+        if not publicar_producto(
+            producto,
+            mensaje_extra=desc,
+            canales_publicados=canales_publicados,
+            guardar_progreso=guardar_progreso,
+            guardar_historial=False
+        ):
+            return jsonify({
+                'error': 'No se pudo completar la publicación. Revisa la consola del bot y vuelve a intentarlo.',
+                'canales_publicados': sorted(canales_publicados)
+            }), 502
+
+        publicaciones[publicacion_id]['completada'] = True
+        publicaciones[publicacion_id]['actualizada'] = datetime.now().isoformat()
+        guardar_publicaciones_manuales(publicaciones)
 
         oferta = {
             'titulo': titulo,
@@ -246,11 +349,24 @@ def publicar():
             'categoria': categoria,
             'fecha': datetime.now().isoformat()
         }
-        guardar_en_github(oferta)
+        try:
+            historial_guardado = guardar_en_github(oferta)
+        except (requests.RequestException, ValueError, KeyError) as e:
+            detalle = describir_error_github(e)
+            print('[ERROR Historial GitHub] ' + detalle)
+            historial_guardado = False
+        else:
+            detalle = ''
 
-        return jsonify({'ok': True})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        if not historial_guardado:
+            return jsonify({
+                'ok': True,
+                'canales_publicados': sorted(canales_publicados),
+                'warning': 'La oferta se publicó, pero la web no se actualizó. '
+                           + (detalle or 'Comprueba la configuración de GITHUB_TOKEN.')
+            })
+
+        return jsonify({'ok': True, 'canales_publicados': sorted(canales_publicados)})
 
 if os.environ.get('RUN_SCHEDULER', '').lower() in ('1', 'true', 'yes'):
     iniciar_programador()

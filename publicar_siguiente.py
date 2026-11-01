@@ -50,7 +50,14 @@ def ejecutar():
         raise RuntimeError('Configura los secretos BOT_TOKEN y CHAT_ID en GitHub Actions.')
 
     horario = horarios_vencidos[-1]
-    programador.publicacion_automatica()
+    resultado = programador.publicacion_automatica()
+    if resultado is False:
+        raise RuntimeError(
+            'No se completo la publicación en todos los canales habilitados. '
+            'La franja no se marcará como procesada y se reintentará '
+            'sin repetir los canales que ya publicaron.'
+        )
+
     guardar_ultimo_horario(horario)
     print('[INFO] Franja procesada: ' + horario)
 

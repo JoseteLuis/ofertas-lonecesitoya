@@ -1,6 +1,7 @@
 name: Publicar ofertas en Telegram, Facebook e Instagram
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '*/15 6-20 * * *'
 

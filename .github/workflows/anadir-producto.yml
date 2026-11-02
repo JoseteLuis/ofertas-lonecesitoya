@@ -35,7 +35,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: ofertas-telegram-cola
+  group: ofertas-redes-cola
   cancel-in-progress: false
 
 jobs:

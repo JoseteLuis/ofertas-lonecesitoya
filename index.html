@@ -12,7 +12,10 @@ header { background: linear-gradient(135deg, #ff9900, #ff6600); padding: 1.5rem 
 header h1 { color: white; font-size: 26px; font-weight: 700; margin-bottom: 4px; }
 header p { color: rgba(255,255,255,0.9); font-size: 14px; }
 .social-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-.social-btn { display: inline-flex; align-items: center; justify-content: center; padding: 8px 18px; border-radius: 20px; color: white; text-decoration: none; font-size: 14px; font-weight: 600; }
+.social-btn { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; color: white; text-decoration: none; transition: filter 0.15s, transform 0.15s; }
+.social-btn:hover { filter: brightness(0.9); transform: translateY(-1px); }
+.social-btn svg { width: 21px; height: 21px; fill: currentColor; }
+.instagram-btn svg { fill: none; stroke: currentColor; stroke-width: 2; }
 .telegram-btn { background: #229ED9; }
 .facebook-btn { background: #1877F2; }
 .instagram-btn { background: #C13584; }
@@ -54,9 +57,15 @@ footer a { color: #ff9900; text-decoration: none; }
     <h1>Ofertas LoNecesitoYa</h1>
     <p>Las mejores ofertas de Amazon cada dia</p>
     <div class="social-links" aria-label="Nuestros canales">
-      <a href="https://t.me/OfertasLoNecesitoYa" class="social-btn telegram-btn" target="_blank" rel="noopener noreferrer">Únete a nuestro canal de Telegram</a>
-      <a href="https://www.facebook.com/Lonecesitoyacom?locale=es_ES" class="social-btn facebook-btn" target="_blank" rel="noopener noreferrer">Facebook</a>
-      <a href="https://www.instagram.com/lo_necesito_ya_com/" class="social-btn instagram-btn" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://t.me/OfertasLoNecesitoYa" class="social-btn telegram-btn" target="_blank" rel="noopener noreferrer" aria-label="Canal de Telegram" title="Telegram">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.8 4.2 18.6 20c-.2 1.1-.9 1.4-1.8.9l-5-3.7-2.4 2.3c-.3.3-.5.5-1 .5l.4-5.1 9.3-8.4c.4-.4-.1-.6-.6-.2L6 13.5l-4.9-1.5c-1.1-.3-1.1-1 .2-1.5L20.4 3c1-.4 1.8.2 1.4 1.2Z"/></svg>
+      </a>
+      <a href="https://www.facebook.com/Lonecesitoyacom?locale=es_ES" class="social-btn facebook-btn" target="_blank" rel="noopener noreferrer" aria-label="Página de Facebook" title="Facebook">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8.2h2.8l.4-3.2h-3.2v-2c0-.9.3-1.6 1.6-1.6h1.7V3.1c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.4H7.3v3.2h2.8V21h3.4Z"/></svg>
+      </a>
+      <a href="https://www.instagram.com/lo_necesito_ya_com/" class="social-btn instagram-btn" target="_blank" rel="noopener noreferrer" aria-label="Perfil de Instagram" title="Instagram">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="18" cy="6" r="0.8" fill="currentColor" stroke="none"/></svg>
+      </a>
     </div>
   </div>
 </header>

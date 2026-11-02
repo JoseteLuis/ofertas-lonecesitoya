@@ -89,6 +89,11 @@ def _canales_meta():
         raise ValueError('META_PAGE_ID requiere META_PAGE_ACCESS_TOKEN.')
     if META_INSTAGRAM_ACCOUNT_ID and not META_PAGE_ACCESS_TOKEN:
         raise ValueError('META_INSTAGRAM_ACCOUNT_ID requiere META_PAGE_ACCESS_TOKEN.')
+    if META_INSTAGRAM_ACCOUNT_ID and not META_INSTAGRAM_ACCOUNT_ID.isdigit():
+        raise ValueError(
+            'META_INSTAGRAM_ACCOUNT_ID debe ser el ID numérico de la cuenta profesional, '
+            'no el nombre @usuario.'
+        )
     if META_PAGE_ACCESS_TOKEN and not (META_PAGE_ID or META_INSTAGRAM_ACCOUNT_ID):
         raise ValueError('META_PAGE_ACCESS_TOKEN requiere un ID de página o de Instagram.')
 
@@ -198,6 +203,7 @@ def publicar_producto(
     precio = producto.get('precio', '')
     url = producto.get('url', '')
     imagen = producto.get('imagen', '')
+    mensaje_extra = mensaje_extra or producto.get('desc', '')
     canales_publicados = canales_publicados if canales_publicados is not None else set()
 
     try:

@@ -120,6 +120,27 @@ def _respuesta_meta(respuesta):
         raise ValueError('Meta devolvió una respuesta inesperada.')
     return resultado
 
+def _obtener_token_pagina():
+    endpoint = (
+        'https://graph.facebook.com/' + META_GRAPH_API_VERSION + '/'
+        + META_PAGE_ID
+    )
+    resultado = _respuesta_meta(requests.get(
+        endpoint,
+        params={
+            'fields': 'access_token',
+            'access_token': META_PAGE_ACCESS_TOKEN
+        },
+        timeout=15
+    ))
+    token_pagina = resultado.get('access_token')
+    if not token_pagina:
+        raise ValueError(
+            'Meta no devolvió un token de acceso para la página. '
+            'Comprueba que el usuario del sistema tenga acceso a la página.'
+        )
+    return token_pagina
+
 def _publicar_facebook(mensaje, url, imagen):
     endpoint = 'https://graph.facebook.com/' + META_GRAPH_API_VERSION + '/' + META_PAGE_ID
     if imagen.startswith('https://'):
@@ -130,7 +151,7 @@ def _publicar_facebook(mensaje, url, imagen):
         datos = {'message': mensaje}
         if url:
             datos['link'] = url
-    datos['access_token'] = META_PAGE_ACCESS_TOKEN
+    datos['access_token'] = _obtener_token_pagina()
     resultado = _respuesta_meta(requests.post(endpoint, data=datos, timeout=30))
     if not resultado.get('id'):
         raise ValueError('Meta no confirmó la publicación en Facebook.')
@@ -189,6 +210,36 @@ def _publicar_instagram(mensaje, imagen):
     if not publicado.get('id'):
         raise ValueError('Meta no confirmó la publicación en Instagram.')
 
+def _longitud_telegram(texto):
+    return len(texto.encode('utf-16-le')) // 2
+
+def _caption_telegram_corto(emoji, titulo, precio, url, hashtags):
+    partes_finales = []
+    if precio:
+        partes_finales.append('\U0001f4b0 ' + precio)
+    if url:
+        partes_finales.append('\U0001f6d2 ' + url)
+    if hashtags:
+        partes_finales.append(hashtags)
+    sufijo = '\n\n'.join(partes_finales)
+    prefijo = emoji + ' '
+    presupuesto_titulo = 1024 - _longitud_telegram(prefijo + '\n\n' + sufijo)
+    if presupuesto_titulo < 1:
+        raise ValueError('El enlace y los datos superan el límite del pie de foto de Telegram.')
+
+    titulo_corto = ''
+    for caracter in titulo:
+        if _longitud_telegram(titulo_corto + caracter) > presupuesto_titulo:
+            break
+        titulo_corto += caracter
+    if len(titulo_corto) < len(titulo):
+        titulo_corto = titulo_corto.rstrip()
+        while titulo_corto and _longitud_telegram(titulo_corto + '…') > presupuesto_titulo:
+            titulo_corto = titulo_corto[:-1]
+        titulo_corto += '…'
+
+    return prefijo + titulo_corto + ('\n\n' + sufijo if sufijo else '')
+
 def publicar_producto(
     producto,
     mensaje_extra='',
@@ -237,15 +288,28 @@ def publicar_producto(
     mensaje += hashtags
 
     canales = ['telegram'] + canales_meta
+    errores_canales = []
     for canal in canales:
         if canal in canales_publicados:
             continue
         try:
             if canal == 'telegram':
                 if imagen and imagen.startswith('http'):
+                    caption = mensaje
+                    parse_mode = 'Markdown'
+                    if _longitud_telegram(caption) > 1024:
+                        caption = _caption_telegram_corto(
+                            emoji, titulo, precio, url, hashtags
+                        )
+                        parse_mode = None
                     respuesta = requests.post(
                         'https://api.telegram.org/bot' + BOT_TOKEN + '/sendPhoto',
-                        json={'chat_id': CHAT_ID, 'photo': imagen, 'caption': mensaje, 'parse_mode': 'Markdown'},
+                        json={
+                            'chat_id': CHAT_ID,
+                            'photo': imagen,
+                            'caption': caption,
+                            **({'parse_mode': parse_mode} if parse_mode else {})
+                        },
                         timeout=10
                     )
                 else:
@@ -270,7 +334,8 @@ def publicar_producto(
                 _publicar_instagram(mensaje_social, imagen)
         except (requests.RequestException, ValueError, KeyError, TimeoutError) as e:
             print('[ERROR ' + canal.capitalize() + '] ' + str(e))
-            return False
+            errores_canales.append(canal)
+            continue
 
         canales_publicados.add(canal)
         if guardar_progreso:
@@ -279,6 +344,10 @@ def publicar_producto(
             except OSError as e:
                 print('[ERROR Cola] No se pudo guardar el progreso de ' + canal + ': ' + str(e))
                 return False
+
+    if errores_canales:
+        print('[INFO] Fallaron estos canales: ' + ', '.join(errores_canales))
+        return False
 
     if guardar_historial:
         oferta = {

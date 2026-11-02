@@ -9,10 +9,13 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f0; color: #1a1a1a; }
 header { background: linear-gradient(135deg, #ff9900, #ff6600); padding: 1.5rem 2rem; display: flex; align-items: center; gap: 1.5rem; }
-header img { width: 130px; height: 130px; object-fit: contain; flex-shrink: 0; }
-header h1 { color: white; font-size: 28px; font-weight: 700; margin-bottom: 4px; }
-header p { color: rgba(255,255,255,0.9); font-size: 15px; margin-bottom: 12px; }
-.telegram-btn { display: inline-flex; align-items: center; gap: 8px; background: #229ED9; color: white; padding: 9px 20px; border-radius: 20px; text-decoration: none; font-size: 14px; font-weight: 600; }
+header h1 { color: white; font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+header p { color: rgba(255,255,255,0.9); font-size: 14px; }
+.social-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.social-btn { display: inline-flex; align-items: center; justify-content: center; padding: 8px 18px; border-radius: 20px; color: white; text-decoration: none; font-size: 14px; font-weight: 600; }
+.telegram-btn { background: #229ED9; }
+.facebook-btn { background: #1877F2; }
+.instagram-btn { background: #C13584; }
 .filtros { display: flex; gap: 8px; padding: 1rem; overflow-x: auto; background: white; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 10; }
 .filtro { border: 1.5px solid #ddd; border-radius: 20px; padding: 6px 14px; font-size: 13px; cursor: pointer; white-space: nowrap; background: white; color: #666; transition: all 0.15s; }
 .filtro.active { background: #ff9900; border-color: #ff9900; color: white; font-weight: 600; }
@@ -40,34 +43,36 @@ footer a { color: #ff9900; text-decoration: none; }
 @media (max-width: 600px) {
   .grid { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 8px; }
   .card img { height: 140px; }
-  header { padding: 1rem; }
-  header img { width: 80px; height: 80px; }
   header h1 { font-size: 20px; }
 }
 </style>
 </head>
 <body>
 <header>
-  <img src="logo.png" alt="Ofertas LoNecesitoYa">
+  <img src="logo.png" alt="Ofertas LoNecesitoYa" style="width:130px;height:130px;object-fit:contain;flex-shrink:0;">
   <div>
     <h1>Ofertas LoNecesitoYa</h1>
     <p>Las mejores ofertas de Amazon cada dia</p>
-    <a href="https://t.me/OfertasLoNecesitoYa" class="telegram-btn" target="_blank">Unete a nuestro canal de Telegram</a>
+    <div class="social-links" aria-label="Nuestros canales">
+      <a href="https://t.me/OfertasLoNecesitoYa" class="social-btn telegram-btn" target="_blank" rel="noopener noreferrer">Únete a nuestro canal de Telegram</a>
+      <a href="https://www.facebook.com/Lonecesitoyacom?locale=es_ES" class="social-btn facebook-btn" target="_blank" rel="noopener noreferrer">Facebook</a>
+      <a href="https://www.instagram.com/lo_necesito_ya_com/" class="social-btn instagram-btn" target="_blank" rel="noopener noreferrer">Instagram</a>
+    </div>
   </div>
 </header>
 <div class="filtros">
   <button class="filtro active" onclick="filtrar(this,'todos')">Todos</button>
-  <button class="filtro" onclick="filtrar(this,'hogar')">🏠 Hogar</button>
-  <button class="filtro" onclick="filtrar(this,'tecnologia')">📱 Tecnologia</button>
-  <button class="filtro" onclick="filtrar(this,'deporte')">⚽ Deporte</button>
-  <button class="filtro" onclick="filtrar(this,'moda')">👗 Moda</button>
-  <button class="filtro" onclick="filtrar(this,'infantil')">👶 Infantil</button>
+  <button class="filtro" onclick="filtrar(this,'hogar')">Hogar</button>
+  <button class="filtro" onclick="filtrar(this,'tecnologia')">Tecnologia</button>
+  <button class="filtro" onclick="filtrar(this,'deporte')">Deporte</button>
+  <button class="filtro" onclick="filtrar(this,'moda')">Moda</button>
+  <button class="filtro" onclick="filtrar(this,'infantil')">Infantil</button>
 </div>
 <div class="stats" id="stats">Cargando ofertas...</div>
 <div class="grid" id="grid"></div>
 <footer>
   <p>Como afiliado de Amazon, obtenemos comisiones por compras enlazadas.</p>
-  <p style="margin-top:8px">Siguenos en <a href="https://t.me/OfertasLoNecesitoYa" target="_blank">Telegram</a> para recibir las ofertas al instante.</p>
+  <p style="margin-top:8px">Síguenos en <a href="https://t.me/OfertasLoNecesitoYa" target="_blank" rel="noopener noreferrer">Telegram</a>, <a href="https://www.facebook.com/Lonecesitoyacom?locale=es_ES" target="_blank" rel="noopener noreferrer">Facebook</a> e <a href="https://www.instagram.com/lo_necesito_ya_com/" target="_blank" rel="noopener noreferrer">Instagram</a>.</p>
 </footer>
 <script>
 let ofertas = [];

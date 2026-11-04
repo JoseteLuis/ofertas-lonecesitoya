@@ -44,6 +44,10 @@ Si publicas desde el panel Flask (`app.py`), configura también `GITHUB_TOKEN` y
 
 El token se usa para actualizar el archivo `ofertas.json` que lee la web. Si falta, es incorrecto o GitHub rechaza los permisos, al abrir el bot se mostrará un aviso o el panel explicará el error de GitHub.
 
+## Desplegar el panel Flask en un servidor
+
+El `Procfile` inicia el programador junto con la web. Configura en el servidor las mismas variables de entorno (`BOT_TOKEN`, `CHAT_ID` y, si corresponde, las variables de GitHub y Meta). Mantén un solo worker de Gunicorn: cada worker adicional iniciaría otro programador y podría publicar la misma franja más de una vez. El servidor debe mantener activo el proceso web para que se ejecuten las publicaciones programadas.
+
 ## Añadir un producto desde el movil
 
 1. Abre el repositorio en GitHub e inicia sesion.
@@ -55,7 +59,7 @@ El enlace debe ser de un producto de Amazon.es. Si contiene un ASIN en la ruta, 
 
 ## Publicación programada
 
-El workflow comprueba cada 15 minutos si hay una franja pendiente y publica como máximo un producto por franja, entre las 09:00 y las 21:00 de `Europe/Madrid`. GitHub puede retrasar los eventos programados, por lo que la hora real no está garantizada al minuto. Si no hay productos en cola, la franja se omite.
+El workflow comprueba cada 15 minutos si hay una franja pendiente y publica como máximo un producto por franja. Hay 12 franjas diarias, aproximadamente cada 80 minutos, entre las 08:00 y las 22:40 de `Europe/Madrid` (ventana de 08:00 a 23:00). GitHub puede retrasar los eventos programados, por lo que la hora real no está garantizada al minuto. Si no hay productos en cola, la franja se omite. La publicación y la acción de añadir productos comparten un grupo de concurrencia para evitar que ambas actualicen `cola.json` al mismo tiempo.
 
 Al publicar, el workflow actualiza `cola.json`, `estado_publicacion.json` y `ofertas.json` en el repositorio. Si un canal habilitado rechaza un producto, la ejecución de Actions falla, la franja no se marca como procesada y el producto sigue en la cola. El workflow guarda el progreso aunque haya un fallo; los canales que ya publicaron no se repiten al reintentar.
 

@@ -21,8 +21,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.environ.get('DATA_DIR', BASE_DIR)
 COLA_FILE = os.path.join(DATA_DIR, 'cola.json')
 HORAS_PUBLICACION = (
-    '09:00', '10:20', '11:40', '13:00', '14:20',
-    '15:40', '17:00', '18:20', '19:40', '21:00'
+    '08:00', '09:20', '10:40', '12:00', '13:20', '14:40',
+    '16:00', '17:20', '18:40', '20:00', '21:20', '22:40'
 )
 _programador_iniciado = False
 COLA_LOCK = threading.Lock()

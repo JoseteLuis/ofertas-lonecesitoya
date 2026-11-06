@@ -272,13 +272,6 @@ def publicar_producto(
         partes_sociales.append('\U0001f6d2 ' + url)
     partes_sociales.append(hashtags)
     mensaje_social = '\n\n'.join(partes_sociales)
-    if 'instagram' in canales_meta and not imagen.startswith('https://'):
-        print('[ERROR Instagram] Se necesita una imagen con URL HTTPS pública.')
-        return False
-    if 'instagram' in canales_meta and len(mensaje_social) > 2200:
-        print('[ERROR Instagram] El texto supera el límite de 2200 caracteres.')
-        return False
-
     mensaje = emoji + ' *' + titulo + '*\n\n' if titulo else emoji + '\n\n'
     if precio:
         mensaje += '\U0001f4b0 *' + precio + '*\n\n'
@@ -289,6 +282,7 @@ def publicar_producto(
 
     canales = ['telegram'] + canales_meta
     errores_canales = []
+    canales_omitidos = []
     for canal in canales:
         if canal in canales_publicados:
             continue
@@ -333,9 +327,13 @@ def publicar_producto(
             else:
                 _publicar_instagram(mensaje_social, imagen)
         except (requests.RequestException, ValueError, KeyError, TimeoutError) as e:
-            print('[ERROR ' + canal.capitalize() + '] ' + str(e))
-            errores_canales.append(canal)
-            continue
+            if canal == 'instagram':
+                print('[AVISO Instagram] Se omite este canal y se continúa: ' + str(e))
+                canales_omitidos.append(canal)
+            else:
+                print('[ERROR ' + canal.capitalize() + '] ' + str(e))
+                errores_canales.append(canal)
+                continue
 
         canales_publicados.add(canal)
         if guardar_progreso:
@@ -359,7 +357,8 @@ def publicar_producto(
             guardar_en_github(oferta)
         except Exception as e:
             print('[ERROR Historial GitHub] ' + str(e))
-    print('[OK] ' + titulo[:60] + ' (' + ', '.join(canales) + ')')
+    canales_completados = [canal for canal in canales if canal not in canales_omitidos]
+    print('[OK] ' + titulo[:60] + ' (' + ', '.join(canales_completados) + ')')
     return True
 
 def publicacion_automatica():

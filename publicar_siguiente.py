@@ -49,7 +49,7 @@ def ejecutar():
     ):
         raise RuntimeError('Configura los secretos BOT_TOKEN y CHAT_ID en GitHub Actions.')
 
-    horario = horarios_vencidos[-1]
+    horario = horarios_vencidos[0]
     resultado = programador.publicacion_automatica()
     if resultado is False:
         raise RuntimeError(

@@ -8,7 +8,8 @@
     "imagen": "https://m.media-amazon.com/images/I/712q-KNmv-L._AC_SY535_.jpg",
     "_publicado_en": [
       "telegram"
-    ]
+    ],
+    "_cola_id": "1c978f76-a8ed-44a9-9704-754fd63d0686"
   },
   {
     "titulo": "Robot aspirador cecotec",
@@ -17,6 +18,205 @@
     "imagen": "",
     "categoria": "hogar",
     "asin": "B0HHK4ZCFR",
-    "_publicado_en": []
+    "_publicado_en": [],
+    "_cola_id": "a01d0170-f119-427d-9282-7bf7713f5676"
+  },
+  {
+    "titulo": "Silla Coche Bebé 360°, i-Size R129, ISOFIX, 40–150 cm",
+    "precio": "109,98€",
+    "desc": "[R129/03 de 40 a 150 cm]-R129/03 de 40 a 150 cm. Una sola silla homologada UN R129/03 acompaña el crecimiento en tres configuraciones: contra el sentido de la marcha con arnés de 40 a 105 cm; adelante de 76 a 105 cm, solo después de 155 cm. meses; modo de reinicio Elevador con cinturón de 3 puntos del coche de 100 a 150 cm.\n[360° y 5 posiciones reclinables]-360° y 5 posiciones reclinables - Gire el asiento hacia la puerta para colocar o levantar al bebé con menos esfuerzo. Antes de partir, retírala y fíjala en la dirección prevista. Las 5 inclinaciones ayudan a encontrar un ángulo cómodo tanto durante el viaje como en los momentos de descanso\n[ISOFIX y pata de soporte siempre en uso]-ISOFIX y pata de soporte siempre en uso - Mantenga los conectores ISOFIX enganchados y la pata extendida de 40 a 150 cm. En modo elevador, el cinturón de 3 puntos sujeta al bebé mientras ISOFIX y pierna continúan estabilizando el asiento. Compruebe los indicadores antes de cada viaje.\n[Protección lateral y arnés de 5 puntos]-Protección lateral y arnés de 5 puntos – Los laterales profundos y la estructura lateral de 3 capas crean una zona envolvente alrededor de la cabeza y el busto. De 40 a 105 cm, las correas acolchadas y antideslizantes ayudan a mantener el arnés bien colocado y cómodo.",
+    "url": "https://link.amazon/B0dlwn9ar?tag=lonecesitoya-21",
+    "categoria": "infantil",
+    "imagen": "https://m.media-amazon.com/images/I/61EOOtjBgiL._AC_SX679_.jpg",
+    "_publicado_en": [],
+    "_cola_id": "51f77e9d-a686-48c7-a63b-d04869f167a9"
+  },
+  {
+    "titulo": "RiToEasysports Zapatos de Taekwondo, Boxeo Deportivo Kung Fu Taichi Zapatos para Hombres y Mujeres Zapatos de Taekwondo para Niños",
+    "precio": "36,35€",
+    "desc": "Zapatos de taekwondo, boxeo deportivo Kung Fu TaiChi zapatos para hombres y mujeres niños taekwondo zapatos\n\nEspecificaciones:\nCondición: nuevo y de alta calidad\nMaterial de los zapatos:\nMaterial individual: goma.\nColor: blanco.\nTamaño: 26, 27, 28, 29, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45(opcional)\nPeso: aprox. 320-375g\n\nContenido del paquete:\n1 par de zapatos de taekwondo.\n1 x bolsa de almacenamiento (color aleatorio)\n\nNota:\nTen en cuenta que el nuevo tipo y el tipo antiguo de este producto se enviarán al azar y asegúrate de que no te importa antes de realizar el pedido.",
+    "url": "https://link.amazon/B0iW7HdTe?tag=lonecesitoya-21",
+    "categoria": "moda",
+    "imagen": "https://m.media-amazon.com/images/I/61o1P4qX+WL._AC_SY535_.jpg",
+    "_publicado_en": [
+      "telegram",
+      "facebook"
+    ],
+    "_cola_id": "98342896-26f6-48c9-a91c-198338b5d7c0"
+  },
+  {
+    "titulo": "Cudy 4G LTE Cat 4 N300, OpenWRT, alimentación por USB-C, LT300",
+    "precio": "32,15€",
+    "desc": "El 4G LTE Cat.4 ofrece una velocidad de descarga de 150 Mbps a través de una tarjeta Nano SIM. Permite compartir la conexión a Internet mediante Wi-Fi 4 a 300 Mbps y dos puertos Ethernet de 100 Mbps cada uno. Se alimenta a través de un puerto USB-C desde cualquier puerto USB o batería externa, lo que permite una colocación flexible.\nLa entrada de alimentación flexible USB-C admite adaptadores PD de 5 V, baterías externas o cargadores para el coche, lo que permite su uso en cualquier lugar; es ideal para autocaravanas, tiendas pop-up y trabajos de campo en los que no se dispone de corriente alterna.\nServidor y cliente VPN con WireGuard, OpenVPN, PPTP y L2TP para un acceso remoto seguro. Compatibilidad con el firmware OpenWRT para paquetes personalizados, enrutamiento avanzado y configuraciones de VPN. La conmutación automática por fallo de WAN/WISP/red móvil mantiene la conexión a Internet activa. Su diseño compacto (118 x 80 x 27,5 mm, 126 g) permite llevarlo a cualquier parte, ideal para viajar y\nListo para usar sin necesidad de contrato de banda ancha. Inserta una tarjeta Nano SIM para disfrutar de conexión 4G al instante. Admite hasta 30 dispositivos para navegar por Internet, ver contenidos en streaming y realizar tareas cotidianas. Incluye un cable USB-C a USB-C para una configuración inmediata.",
+    "url": "https://link.amazon/B02NKyqNs?tag=lonecesitoya-21",
+    "categoria": "tecnologia",
+    "imagen": "https://m.media-amazon.com/images/I/51VerYTOyWL._AC_SX679_.jpg",
+    "_cola_id": "3b378421-19a3-474c-86bb-82d14ffdfc36"
+  },
+  {
+    "titulo": "Zapatillas de Niños Niñas Zapatos de Correr Deportivas Ligeras Tenis de Running Shoes de Walking Sneakers Baloncesto Transpirable Cómodo Calzado Deportivo Unisex",
+    "precio": "15,55€",
+    "desc": "Envío gratuito para pedidos superiores a 29 € en productos vendidos o gestionados por Amazon. Devoluciones gratuitas hasta 30 días después de recibir el pedido",
+    "url": "https://link.amazon/B0gsMIX0K?tag=lonecesitoya-21",
+    "categoria": "deporte",
+    "imagen": "https://m.media-amazon.com/images/I/61-xYEjj1KL._AC_SY535_.jpg",
+    "_cola_id": "b60a549e-4803-4ecc-be03-deba2bb8fd5e"
+  },
+  {
+    "titulo": "CITÉTOILE Abrigo para Perro Invierno con Paso de Correa Rojo XL",
+    "precio": "36,64€",
+    "desc": "Mantener caliente y cómodo: Este abrigo para perros de invierno está fabricado en poliéster de alta calidad con forro polar grueso que proporciona calidez sin peso, protegiendo eficazmente a su mascota del frío y el viento gracias a su diseño bien cosido y acabados impecables.\nDiseño de estilo de celosía: este abrigo de perro de invierno tiene un escote de cordero, lo que agrega elegancia. El diseño de celosía escocesa es ideal para Navidad y celebraciones.\nAdecuado para varios tamaños: Disponible en 5 tallas con correas de nylon ajustables en cuello y pecho para máxima comodidad. Para garantizar el mejor ajuste, le sugerimos medir a su mascota y consultar nuestra detallada guía de tallas antes de comprar.\nAbrigo a prueba de viento: Chaleco para perros a prueba de viento, adecuado para invierno, primavera y otoño, con agujeros de cuero pu, que permiten pasear a los perros de forma segura, muy adecuado para actividades interiores y Exteriores.",
+    "url": "https://link.amazon/B00xvK1Lp?tag=lonecesitoya-21",
+    "categoria": "moda",
+    "imagen": "https://m.media-amazon.com/images/I/71RkHut68fL._AC_SX522_.jpg",
+    "_cola_id": "b5e9fa46-8104-458a-8a67-0fb23635d9ff"
+  },
+  {
+    "titulo": "Safeliveo Detector de Humo interconectado WiFi, Detector de Humo con batería de 10 años, Juego de 3 con estación Base, Certificado TUV Rheinland, Juego de Alarma de Humo con Control por aplicación.",
+    "precio": "41,39€",
+    "desc": "Controle la seguridad de su hogar en cualquier momento y lugar: Recibirá notificaciones en su teléfono inteligente si el minisistema de alarma contra incendios inteligente activa la alarma. No importa dónde se encuentre, puede recibir las advertencias de la aplicación siempre que su teléfono inteligente pueda navegar por Internet. Tome medidas efectivas a tiempo para reducir las pérdidas.\nControl de la App: todo es más fácil con la ayuda de la App. Especialmente amigable para personas mayores. Ya no es necesario subir escaleras para probar o silenciar el detector de humo. Con solo un clic en la App, puede probar el detector de humo, silenciarlo, verificar el estado del detector de humo, etc.\nConjunto de detectores de humo interconectados de forma inalámbrica: se pueden agregar hasta 20 detectores de humo al sistema. Si una de las alarmas de humo del minisistema de alerta temprana contra incendios detecta humo, todos los detectores de humo y la estación base activarán una alarma sonora fuerte con un LED rojo parpadeante. La función interconectada funciona bien incluso si la conexión a Internet por WiFi es defectuosa, pero no se envían notificaciones a su teléfono.\nDetectores de humo con batería de 10 años de duración: Los detectores de humo están equipados con un sensor fotoeléctrico de alta calidad de 10 años de duración y una batería de litio de 10 años de duración. Menos falsas alarmas y no es necesario cambiar la batería durante su vida útil.",
+    "url": "https://link.amazon/B0fKGGEWF?tag=lonecesitoya-21",
+    "categoria": "infantil",
+    "imagen": "https://m.media-amazon.com/images/I/61LTS5kcZiL._AC_SX569_.jpg",
+    "_cola_id": "d040dc3e-d90a-4f9c-a169-6ddf91078169"
+  },
+  {
+    "titulo": "FIT & FUN Correa Oficial FC Barcelona + Reloj Digital Compatible para Niño o Niña – Hora y Fecha – Funciona con Pilas",
+    "precio": "14,90€",
+    "desc": "Reloj digital con correa oficial del FC Barcelona diseñado para un uso diario práctico, cómodo y con identidad de equipo. El diseño de la correa incorpora los colores y detalles característicos del Barça, permitiendo llevar el estilo del club en cualquier momento. Este modelo integra un módulo de reloj digital compatible con la correa con funciones básicas de hora y fecha, ofreciendo una visualización clara y fácil de usar. Es una opción ideal para quienes buscan un reloj sencillo y funcional, sin configuraciones complejas ni conectividad, especialmente como primer reloj para niños o como accesorio práctico para jóvenes aficionados. Funciona con 2 pilas LR44, no lleva batería interna y no es recargable, por lo que no necesita cables ni carga, facilitando un uso sencillo y sin complicaciones en el día a día. La correa, fabricada en TPU, es ligera, resistente y ajustable a diferentes tamaños de muñeca, asegurando un ajuste cómodo para el uso continuado. El reloj es resistente a salpicaduras, adecuado para situaciones cotidianas como lavarse las manos o la lluvia, pero no es sumergible ni apto para baño o piscina. Correa disponible en diferentes diseños, ya sean inspiradas en equipaciones del FC Barcelona o personalizadas con el nombre y número de jugadores, este reloj con correa oficial oficial del FC Barcelona combina funcionalidad y estilo para aficionados al fútbol. Una opción ideal como regalo para niños, niñas y fans del Barça que buscan un accesorio práctico, fácil de usar y con valor emocional. La correa incluida es un producto oficial licenciado del FC Barcelona. El módulo digital FIT & FUN no constituye un módulo digital oficial del FC Barcelona ni está fabricado por el club.",
+    "url": "https://link.amazon/B0iasSbr3?tag=lonecesitoya-21",
+    "categoria": "moda",
+    "imagen": "https://m.media-amazon.com/images/I/51fiUUNXGsL._AC_SX679_.jpg",
+    "_cola_id": "e64753f9-1a7f-48e0-a10b-ed0383275af2"
+  },
+  {
+    "titulo": "Pequeño Extintor Automático (1 Pieza)",
+    "precio": "45,12€",
+    "desc": "✔ SUPRESIÓN INSTANTÁNEA DEL FUEGO A 170ºC ±10ºC – El Ferosticker F03 se activa automáticamente a 170ºC ±10ºC, liberando un aerosol que suprime instantáneamente el fuego al interrumpir la combustión. Proporciona una protección rápida y automática contra incendios en espacios cerrados, con un volumen protegido de 0,3 m³. Diseñado específicamente para espacios pequeños y confinados.\n✔ SIN ELECTRICIDAD, PRESIÓN NI CABLEADO – A diferencia de los extintores tradicionales, el Ferosticker funciona sin baterías ni cables. Su sistema autoactivado garantiza una seguridad contra incendios sin complicaciones ni mantenimiento. Protección versátil: eficaz contra fuegos de clase A, B, C, E y F, cubriendo una amplia variedad de riesgos.\n✔ INSTALACIÓN EN SEGUNDOS – NO NECESITA HERRAMIENTAS – Simplemente pégalo en el lugar deseado y el Ferosticker F03 estará listo para proteger. Diseñado para una instalación rápida y sin esfuerzo, funciona en paneles eléctricos, baterías de litio, cajas de fusibles, generadores solares y más.\n✔ PROTECCIÓN DURADERA Y SIN MANTENIMIENTO – Una vez instalado, este extintor automático funciona hasta por 6 años, sin necesidad de mantenimiento, recargas ni inspecciones. Además, es de 3 a 10 veces más eficaz que el Halón y el CO₂, brindando una supresión de incendios superior a largo plazo.",
+    "url": "https://link.amazon/B0iEAncf1?tag=lonecesitoya-21",
+    "categoria": "hogar",
+    "imagen": "https://m.media-amazon.com/images/I/71Dt5Ye6feL._SX425_.jpg",
+    "_cola_id": "a4edbfaf-b163-47c1-87f0-f64a8ac9de70"
+  },
+  {
+    "titulo": "Bloque de Distribución de Energía Rojo Negro M8, 4 Terminales 250A",
+    "precio": "12,73€",
+    "desc": "[TABLERO DE LATÓN DE BAJA RESISTENCIA] - Equipado con un tablero de latón de baja resistencia, esta barra colectora ofrece buena conductividad eléctrica y resistencia a la corrosión para un funcionamiento estable.\n[ALMACENAMIENTO ORDENADO Y SEGURO] - El bloque de distribución de energía recoge todos los arneses y cables de los electrodos para un almacenamiento y cableado ordenados y seguros.\n[SUMINISTRO DE ALIMENTACIÓN DE CC CONFIABLE]: con una corriente nominal de 250 A, esta barra colectora de 48 V de CC se adapta perfectamente a los sistemas de suministro de energía de CC, lo que garantiza un rendimiento confiable y eficiente.\n[MATERIALES DURADEROS] - Construida con ABS de primera calidad, aleación de zinc y materiales de latón, esta barra colectora ofrece una excelente durabilidad para uso a largo plazo.",
+    "url": "https://link.amazon/B0gwboOGN?tag=lonecesitoya-21",
+    "categoria": "hogar",
+    "imagen": "https://m.media-amazon.com/images/I/61UUjkvCvYL._SX425_.jpg",
+    "_cola_id": "1e4b4971-b5f8-49e4-bd48-90cc06ce0e49"
+  },
+  {
+    "titulo": "Sábana Bajera 140x200 - Microfibra Bolsillo 30cm (12\") - Gris oscuro",
+    "precio": "14,87€",
+    "desc": "SÁBANA BAJERA GRIS OSCURO 140x200: La sábana bajera CGK Linens 140x200 cm se adapta perfectamente a tu cama, ya sea estándar o de muelles. La elegancia de nuestra ropa de cama 140x200 añade un toque de tranquilidad a cualquier decoración.\nSÁBANA AJUSTABLE PARA COLCHONES ALTOS: Adecuada para colchones de hasta 30 cm de profundidad, nuestras sábanas de microfibra ofrecen el ajuste perfecto. Gracias al elástico, obtienes una sábana que no se desliza y se ajusta óptimamente al colchón.\nSÁBANA DE MICROFIBRA: Usamos fibras sintéticas de alta calidad y duraderas. Nuestra sábana bajera de microfibra es suave, sin arrugas y transpirable, ofreciéndote años de excelente sueño.\nSÁBANAS DE MICROFIBRA DURADERAS: Nuestras sábanas ajustables son cómodas, lavables a máquina a 40°C y fáciles de cuidar. Las sábanas de microfibra CGK Linens mantienen su sensación lujosa y apariencia sin arrugas incluso después de numerosos lavados.",
+    "url": "https://link.amazon/B0hgsTtHY?tag=lonecesitoya-21",
+    "categoria": "hogar",
+    "imagen": "https://m.media-amazon.com/images/I/71Cu3Y54f+L._AC_SY741_.jpg",
+    "_cola_id": "d8510ff1-a7cf-4b35-966b-63f7bbb4a789"
+  },
+  {
+    "titulo": "BLUEGO 2000 ml - Botella de cristal con mango de acero inoxidable y marcador de tiempo, cristal de motivación 2 l, con funda de silicona y pajita para gimnasio, oficina, exterior, deporte, botellas de",
+    "precio": "22,53€",
+    "desc": "【DISEÑO DE TAPA REBOTANTE】: La botella de agua de cristal BLUEGO de 2000ml con pajita tiene 2 formas de beber, con diseño de tapa emergente, el botón de un toque te permite beber agua más fácilmente, solo presiona el botón y la pajita saltará automáticamente. Con tapa de cierre, la tapa abatible con un solo toque mantiene las superficies cubiertas y limpias.\nCon marcador de tiempo: esta botella de agua de vidrio de 2 litros tiene un marcador de tiempo y un marcador de capacidad de agua, que puede ser una buena medida de cuánta agua bebes todos los días, ingesta científica de 8 tazas de agua, sin necesidad de rellenar con frecuencia, disfruta del sabor refrescante del agua limpia y pura.\nMango de acero inoxidable: la botella de agua de vidrio, diseñada con un mango único de acero inoxidable, tiene una capacidad de carga más fuerte, por lo que no tienes que preocuparte por que se caiga al sacarla, y es fácil de llevar.\n【DISEÑO DE BOCA ANCHA】: Esta botella de agua con diseño de boca ancha, no solo puedes poner cubitos de hielo y frutas, sino que también es muy fácil de limpiar. Además, puedes utilizar nuestro cepillo para tazas gratis para limpiar la botella de agua.",
+    "url": "https://link.amazon/B06S9zQDI?tag=lonecesitoya-21",
+    "categoria": "deporte",
+    "imagen": "https://m.media-amazon.com/images/I/71QBGEPzecL._AC_SX569_.jpg",
+    "_cola_id": "68f1d122-5181-4ac4-b4a3-b9fecb8aaaed"
+  },
+  {
+    "titulo": "Correa de repuesto de 22 mm para Amazfit Bip 6/Bip 5/Unity/GTR 4/3/3 Pro/2/2e/47 mm/Pace/Stratos 2/2S/3/Balance pulsera de 46 mm, ajustable de acero inoxidable",
+    "precio": "9,49€",
+    "desc": "Correa de repuesto de 22 mm para Amazfit Bip 6/Bip 5/Unity/GTR 4/3/3 Pro/2/2e/47 mm/Pace/Stratos 2/2S/3/Balance pulsera de 46 mm, ajustable de acero inoxidable",
+    "url": "https://link.amazon/B0fTuDcLK?tag=lonecesitoya-21",
+    "categoria": "hogar",
+    "imagen": "https://m.media-amazon.com/images/I/61C--XR30KL._AC_SX522_.jpg",
+    "_cola_id": "291147cd-7acb-471a-b072-4e0fb2319255"
+  },
+  {
+    "titulo": "Stoie's Juguete de Xilófono Piano de 8 Teclas de Colores del Arcoíris en Clave de Do con Baquetas y Libro de Música para Niños y Niñas Pequeños",
+    "precio": "18,99€",
+    "desc": "XILOFONO BEBE EN DO MAJEUR AVEC 8 TOUCHES COLORÉES – Les xilofonos infantiles de Stoie sont dotés de 8 touches accordées en gamme de Do majeur, permettant aux enfants de jouer et de créer une large gamme de mélodies et de chansons magnifiques. Les touches colorées et vives aideront à renforcer la reconnaissance des notes.\nJOUET MUSICAL AMUSANT ET ÉDUCATIF – Alliant apprentissage et jeu interactif, ce xilofono madera pour enfants de 5 à 9 ans développe la concentration, la mémoire, les compétences musicales et favorise la créativité. Les enfants prendront plaisir à jouer des chansons et des mélodies et ressentiront une grande satisfaction en faisant de la musique.\nDURABLE ET SÉCURISÉ – Le xilofono infantil pour bébé Stoie est fabriqué à partir de matériaux écologiques, recouvert de peinture non toxique et adaptée aux enfants, respectant les normes de sécurité internationales telles que ASTM. Construit avec du bois de qualité aux bords lisses et arrondis, ce xilofono madera pour enfants est conçu pour un jeu enthousiaste tout en protégeant les petites mains. Parfait pour les enfants de 3 ans et plus.\nDIVERTISSEMENT FAMILIAL – Ce xilofono infantil en bois pour enfants est non seulement adapté à une utilisation domestique, mais aussi parfait pour les salles de classe et les activités de groupe. Parents, frères et sœurs, et amis peuvent participer au plaisir et créer de la musique ensemble. Il favorise les liens familiaux et peut être apprécié par les enfants comme par les adultes.",
+    "url": "https://link.amazon/B0fHJjVYl?tag=lonecesitoya-21",
+    "categoria": "infantil",
+    "imagen": "https://m.media-amazon.com/images/I/81l7k1liXCL._AC_SX679_.jpg",
+    "_cola_id": "4814113e-af58-4646-943f-3aa993adac22"
+  },
+  {
+    "titulo": "Canasta de Baloncesto para Niños 4 en 1 - Aro de Baloncesto Infantil Regulable en Altura con Juego de Golf, Anillo, Fútbol,Lanzamiento de Portería para (Verde)",
+    "precio": "51,98€",
+    "desc": "4 EN 1 ARO DE BALONCESTO:Este aro de baloncesto para niños tiene cinco deportes para jugar, lanzamiento de anillos, juego de baloncesto, juego de golf, juego de portería de fútbol y cuentacuentos. También viene con 1 baloncesto, 1 balón de fútbol, 4 anillos, 1 bomba, 1 pelota de golf y palo de golf. Los niños se divertirán mucho jugando con él.\nALTURA REGULABLE:Este aro de baloncesto para niños pequeños tiene CINCO ajustes de altura de 45'' a 60'', sus hijos podrán utilizarlo a medida que crecen, es adecuado para los niños en un amplio rango de edad de 1 a 12 años. Esta canasta de baloncesto para niños y su soporte serán un regalo especial para acompañar el crecimiento de los niños. A los niños les encantará.\nENTRENAR LAS HABILIDADES DEL BEBÉ:Los niños pueden comenzar a aprender diferentes deportes a través de este conjunto de baloncesto . Ayuda a los niños con todo tipo de manos, pies, coordinación de los ojos, y ayuda mucho en la mejora de su equilibrio, la precisión, el pensamiento y la coordinación muscular. ¡Los niños pueden jugar solos o junto con sus amigos, los padres pueden unirse a él también y tener un buen tiempo de unión!\nFÁCIL DE MONTAR:El montaje de este juego de baloncesto es súper fácil y ni siquiera necesita usar ninguna herramienta para armarlo. También es fácil de desmontar, se puede utilizar tanto en interiores como en exteriores. La base puede ser ponderada con arena o agua para la estabilidad.",
+    "url": "https://link.amazon/B03kyBY2g?tag=lonecesitoya-21",
+    "categoria": "infantil",
+    "imagen": "https://m.media-amazon.com/images/I/61f1+KrBuQL._AC_SX679_.jpg",
+    "_cola_id": "4b818166-8c29-47b7-b218-ffa5e3ee12ce"
+  },
+  {
+    "titulo": "LIFEZEAL Cambiador con Bañera Plegable (Gris)",
+    "precio": "131,76€",
+    "desc": "👶【Bañera multifuncional para bebés】Es una bañera multifuncional que se puede utilizar no solo para bañar a su bebé, sino también para cambiar pañales, cambiar ropa, masajear y alimentar a su bebé, con un travesaño debajo de la bañera para colgar ropa.\n👶【Conveniente diseño plegable】Este cambiador con bañera se puede plegar fácilmente en 4 pasos, ahorrando tiempo y esfuerzo. Una vez plegada, puede guardarse fácilmente en un rincón o en un armario.\n👶【Ruedas universales】Este cambiador está equipado con 4 ruedas universales flexibles con frenos para cambiar fácilmente de dirección y moverse a cualquier destino, y se mueve silenciosamente sin molestar al bebé.\n👶【Construcción robusta】Este cambiador con bañera está hecho de fuertes tubos de hierro con uniones ajustadas para garantizar la estabilidad. La bañera tiene una capacidad de carga de 35 kg y la bandeja del estante tiene una capacidad de carga de 15 kg.",
+    "url": "https://link.amazon/B04eRvnXk?tag=lonecesitoya-21",
+    "categoria": "infantil",
+    "imagen": "https://m.media-amazon.com/images/I/713Sg4FzRAL._AC_SX679_.jpg",
+    "_cola_id": "8f603e96-688b-42a7-baaf-bd1e4322cd72"
+  },
+  {
+    "titulo": "CHILL HOUSE Grifo Bidet para WC - Ducha Higienica Acero Inoxidable AISI 304",
+    "precio": "24,33€",
+    "desc": "Grifo Bidet para WC con Instalacion Universal: Esta Ducha para WC es compatible con multiples sistemas gracias a sus 2 salidas de agua con conexion de 1/2\". Su diseno moderno garantiza una integracion perfecta en cualquier instalacion de bano o fregadero, proporcionando una solucion de ducha para inodoro estetica y funcional. Este grifo bidet para WC sirve como grifo sustituto de bidet tradicional.\nValvula de Control Dual Avanzada: Equipada con una valvula de control dual, esta unidad ofrece un control preciso sobre el flujo de agua de tu inodoro. Las 2 llaves de paso de agua bano aseguran una operacion facil y segura, mejorando la eficiencia del uso del agua y anadiendo mas seguridad a la instalacion al poder cerrarlas de forma individual, manteniendo el flujo de agua de la cisterna del WC aunque cierres la del grifo pulverizador.\nGrifo Bidet para WC Multifuncional: Perfecto para la higiene personal y la limpieza del inodoro japones. Este grifo bidet para WC incluye un flexo ducha duradero, ideal para una variedad de usos, desde la botella lavado perineal postparto hasta el mantenimiento general del vater bano. Este grifo higienico wc nos presta esta doble funcion, es un grifo para bidet multifuncion y un inodoro con bidet al mismo tiempo.\nMaterial de Calidad y Diseno Compacto: Griferia bano fabricada con materiales de alta calidad que evitan fugas y problemas de presion. La llave de angulo con 2 valvulas de salida de agua independientes esta fabricada en Acero Inoxidable AISI/SUS 304 por lo que evita la corrosion y es apto para soportar la presion de la acometida de agua. Su diseno compacto facilita su instalacion en cualquier WC o inodoro, ofreciendo una alternativa economica y contemporanea al bidet tradicional.",
+    "url": "https://link.amazon/B02zcxD7W?tag=lonecesitoya-21",
+    "categoria": "hogar",
+    "imagen": "https://m.media-amazon.com/images/I/71oqdEO8t6L._AC_SX569_.jpg",
+    "_cola_id": "ba087ee5-800c-4d7d-92ac-eb837a139fd3"
+  },
+  {
+    "titulo": "Spaceshuttle Misión Espacial, Juguete Astronauta con Sonido, 3 Personajes astronautas, Cabina abrible, Boquilla de pulverización",
+    "precio": "19,99€",
+    "desc": "✈️SPACE JUEGO DE JUGUETES ESPACIALES - El juego de juguetes espaciales incluye juguetes de la lanzadera espacial con 3 figuras de astronautas, silenciador de pulverización y coche lunar. Con los juguetes del transbordador espacial, los niños pueden explorar el espacio y aprender más sobre el sistema espacial.\n✈️SICHER Y DURADERO - Hecho de material ABS de alta calidad, este juguete de transporte espacial es duradero y proporciona diversión de larga duración para los niños.\n✈️SPRÜH FUNCIÓN DE SALIDA - El juguete del transbordador espacial tiene efectos visuales y sonoros para que los niños tengan una experiencia completa y empiecen a explorar el universo. La aleta de cola del avión se puede quitar para llenarlo de agua. Después, pulsando el botón de puesta en marcha, se puede pulverizar el escape, acompañado de efectos sonoros.\n✈️RAUMPROJEKTION Y CABINA ABIERTA - No se trata sólo de una maqueta de juguete de nave espacial, sino que cuenta con una proyección de temática espacial. La cabina se puede abrir para acomodar la figura del astronauta en su interior. Y pueden controlar el avión y ayudarles a aprender más sobre el espacio.",
+    "url": "https://link.amazon/B01nypiF4?tag=lonecesitoya-21",
+    "categoria": "infantil",
+    "imagen": "https://m.media-amazon.com/images/I/6129GqDo0hL._AC_SX679_.jpg",
+    "_cola_id": "cc3a3404-f5dd-4fdc-9071-34e9ab55071c"
+  },
+  {
+    "titulo": "2026 Tableta Android 16 con Teclado y Lápiz, Tableta de 11 Pulgadas 32GB RAM+256GB ROM+Ampliable hasta 1TB, 7800mAh, Tableta 2 en 1 Kit 8 en 1 con Funda, Ratón, Auriculares y Cargador (Negro)",
+    "precio": "123,49€",
+    "desc": "【Sistema Android 16 & Procesador 5 Núcleos para Multitarea Fluida】Esta tableta Android cuenta con el sistema Android 16 con certificación Google GMS, garantizando un sistema puro, estable y sin publicidad preinstalada. Equipada con procesador de cinco núcleos, esta tableta de 11 pulgadas abre aplicaciones rápidamente y alterna sin problemas entre trabajo, estudio y entretenimiento. Con excelente protección de privacidad, ofrece un rendimiento constante sin ralentizaciones para teletrabajo, clases online y uso diario de adultos.\n【Gran Memoria: 32GB RAM + 256GB ROM, Ampliable hasta 1TB】Esta tableta 11 pulgadas dispone de 32GB RAM (3GB físicos + 29GB de expansión virtual) y 256GB de almacenamiento interno. Puedes ampliar el espacio hasta 1TB mediante tarjeta Micro SD, para guardar gran cantidad de archivos, fotos y vídeos sin necesidad de suscripciones en la nube. Una potente tableta Android con gran capacidad para ejecutar múltiples aplicaciones simultáneamente sin ralentizaciones.\n【Pantalla IPS 11 Pulgadas Widevine L1, Batería 7800mAh y Cámaras Duales】Esta tableta Android 16 integra pantalla IPS de 10,95 pulgadas (11 pulgadas) 1280×800, colores realistas desde cualquier ángulo y tecnología anti luz azul para reducir la fatiga ocular. Cuenta con Widevine L1 para reproducir contenido HD en Prime Video, HBO, Disney+ (Netflix requiere certificación adicional). Su batería de 7800mAh ofrece horas de reproducción continua. Cámara frontal 5MP y trasera 8MP con flash para videollamadas, reuniones y escaneo de documentos. Los altavoces estéreo duales brindan sonido nítido para ver series y contenido multimedia en tu tableta.\n【Kit 8 en 1 Completo: Tableta con Teclado y Lápiz】Este paquete incluye todo lo necesario: tableta Android, funda protectora, lápiz capacitivo, teclado Bluetooth inalámbrico, ratón inalámbrico, auriculares con cable, cargador y cable Type‑C. Esta tableta de 11 pulgadas se transforma fácilmente en un mini portátil. La tableta con teclado y lápiz te permite escribir, tomar notas, dibujar y trabajar cómodamente. Es una tableta con funda lista para usar en cualquier momento, ideal para estudio, oficina y entretenimiento.",
+    "url": "https://link.amazon/B0adJedfC?tag=lonecesitoya-21",
+    "categoria": "tecnologia",
+    "imagen": "https://m.media-amazon.com/images/I/71t5ZV9c0WL._AC_SX679_.jpg",
+    "_publicado_en": [
+      "telegram",
+      "instagram"
+    ],
+    "_cola_id": "402a3074-26ba-4f79-b284-3109ce232168"
+  },
+  {
+    "titulo": "KEMISANT Cinturón Hombre, Cinturón Cuero Automático Trinquete Cierre,Traje Negocios,Ancho 35 mm,Tamaño Ajustado",
+    "precio": "11,72€",
+    "desc": "✓ Comprar KEMISANT Cinturón Hombre, Cinturón Cuero Automático Trinquete Cierre,Traje Negocios,Ancho 35 mm,Tamaño Ajustado(Negro-110cm/30-36\" Cintura ajuste) : Moda en Amazon.es",
+    "url": "https://link.amazon/B093o4MfK?tag=lonecesitoya-21",
+    "categoria": "moda",
+    "imagen": "https://m.media-amazon.com/images/I/71JB4cSmbqL._AC_SY741_.jpg",
+    "_cola_id": "33f89f70-a54f-43bb-804f-690ca407fc02"
+  },
+  {
+    "titulo": "Agenda Semanal 2027 Vertical Espiral Planificación Semanal",
+    "precio": "14,99€",
+    "desc": "Fabricación premium：La encuadernación en espiral flexible combinada con funda de PU anti-desgaste permite una apertura totalmente plana para escribir cómodamente y protege las páginas de los arañazos superficiales\nEstructura de planificación：Formato A5 práctico de 21,9 x 16,2 cm, planificación de 12 meses desde Enero hasta Diciembre de 2027 con la disposición clásica de una semana en dos páginas\nExperiencia de escritura：El papel anti-traspaso de 100 g/m² evita la penetración de la tinta y asegura apuntes claros sin marcas indeseables en el reverso\nDetalles prácticos：Dispone de cierre elástico, portabolígrafo, bolsillo interior, índice mensual, hojas desprendibles y una regla incluida en el interior",
+    "url": "https://link.amazon/B06UFrGG5?tag=lonecesitoya-21",
+    "categoria": "hogar",
+    "imagen": "https://m.media-amazon.com/images/I/811BqLXhOVL._AC_SX522_.jpg",
+    "_cola_id": "d6d5e412-e371-46ab-9ab2-e0e2301cbb19"
+  },
+  {
+    "titulo": "BULLIANT Calcetines Tobilleros Hombre 6 Pares, Calcetines Cortos Deporte Running Ciclismo Hombre",
+    "precio": "12,34€",
+    "desc": "BULLIANT Calcetines Deportes Mujer 6 Pares, Calcetines Corriendo Cojín CompletO Lengüeta Talón : Amazon.es: Moda",
+    "url": "https://link.amazon/B05dVh9bU?tag=lonecesitoya-21",
+    "categoria": "deporte",
+    "imagen": "https://m.media-amazon.com/images/I/811BInkKOSL._AC_SX679_.jpg",
+    "_cola_id": "69937868-8ae3-4054-8a04-38f9d4f8c513"
   }
 ]

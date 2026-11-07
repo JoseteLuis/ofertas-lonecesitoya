@@ -8,6 +8,8 @@ import json
 import base64
 import hashlib
 import threading
+import time
+import uuid
 from datetime import datetime
 from programador import COLA_LOCK, iniciar_programador, publicar_producto
 
@@ -272,6 +274,68 @@ def guardar_cola(cola):
     with open(COLA_FILE, 'w', encoding='utf-8') as f:
         json.dump(cola, f, ensure_ascii=False, indent=2)
 
+def leer_cola_github():
+    token = GITHUB_TOKEN.strip()
+    if not token:
+        raise RuntimeError('Falta GITHUB_TOKEN para sincronizar la cola con GitHub.')
+
+    api_url = (
+        'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO
+        + '/contents/cola.json'
+    )
+    respuesta = requests.get(
+        api_url,
+        headers={
+            'Authorization': 'Bearer ' + token,
+            'Accept': 'application/vnd.github+json'
+        },
+        timeout=15
+    )
+    if respuesta.status_code == 404:
+        return [], None
+    respuesta.raise_for_status()
+    archivo = respuesta.json()
+    contenido = json.loads(base64.b64decode(archivo['content']).decode('utf-8'))
+    if not isinstance(contenido, list):
+        raise ValueError('El archivo cola.json de GitHub no contiene una lista válida.')
+    return contenido, archivo['sha']
+
+def actualizar_cola_github(modificar):
+    api_url = (
+        'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO
+        + '/contents/cola.json'
+    )
+    headers = {
+        'Authorization': 'Bearer ' + GITHUB_TOKEN.strip(),
+        'Accept': 'application/vnd.github+json'
+    }
+
+    for intento in range(3):
+        cola, sha = leer_cola_github()
+        cola_actualizada, resultado, hubo_cambios = modificar(cola)
+        if not hubo_cambios:
+            return resultado
+
+        payload = {
+            'message': 'Actualiza la cola de publicaciones desde el panel',
+            'content': base64.b64encode(
+                json.dumps(cola_actualizada, ensure_ascii=False, indent=2).encode('utf-8')
+            ).decode('ascii')
+        }
+        if sha:
+            payload['sha'] = sha
+
+        respuesta = requests.put(api_url, headers=headers, json=payload, timeout=15)
+        if respuesta.status_code in (409, 422) and intento < 2:
+            time.sleep(0.5 * (intento + 1))
+            continue
+        respuesta.raise_for_status()
+        return resultado
+
+    raise RuntimeError(
+        'La cola de GitHub cambió varias veces. Actualízala e inténtalo de nuevo.'
+    )
+
 def leer_publicaciones_manuales():
     try:
         with open(PUBLICACIONES_MANUALES_FILE, 'r', encoding='utf-8') as f:
@@ -287,27 +351,70 @@ def guardar_publicaciones_manuales(publicaciones):
 @app.route('/cola', methods=['GET'])
 def ver_cola():
     with COLA_LOCK:
-        return jsonify(leer_cola())
+        try:
+            cola, _ = leer_cola_github()
+            respuesta = jsonify(cola)
+            respuesta.headers['X-Queue-Source'] = 'github'
+            return respuesta
+        except (requests.RequestException, ValueError, KeyError, RuntimeError) as e:
+            print('[ERROR Cola GitHub] ' + str(e))
+            return jsonify({'error': 'No se pudo cargar la cola de GitHub: ' + str(e)}), 502
 
 @app.route('/cola/anadir', methods=['POST'])
 def anadir_cola():
-    data = request.json
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({'error': 'La solicitud no contiene datos JSON válidos.'}), 400
+    if not data.get('titulo') or not data.get('url'):
+        return jsonify({'error': 'El título y la URL del producto son obligatorios.'}), 400
+
+    cola_id = data.get('_cola_id')
+    if not isinstance(cola_id, str) or not cola_id.strip() or len(cola_id) > 128:
+        cola_id = str(uuid.uuid4())
+    producto = dict(data)
+    producto['_cola_id'] = cola_id
+
     with COLA_LOCK:
-        cola = leer_cola()
-        cola.append(data)
-        guardar_cola(cola)
-    return jsonify({'ok': True, 'total': len(cola)})
+        try:
+            def anadir(cola):
+                if any(item.get('_cola_id') == cola_id for item in cola):
+                    return cola, len(cola), False
+                cola.append(producto)
+                return cola, len(cola), True
+
+            total = actualizar_cola_github(anadir)
+            return jsonify({'ok': True, 'total': total})
+        except (requests.RequestException, ValueError, KeyError, RuntimeError) as e:
+            print('[ERROR Cola GitHub] ' + str(e))
+            return jsonify({'error': 'No se pudo guardar el producto en GitHub: ' + str(e)}), 502
 
 @app.route('/cola/eliminar', methods=['POST'])
 def eliminar_cola():
-    data = request.json
-    idx = data.get('index', -1)
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({'error': 'La solicitud no contiene datos JSON válidos.'}), 400
+
     with COLA_LOCK:
-        cola = leer_cola()
-        if 0 <= idx < len(cola):
-            cola.pop(idx)
-            guardar_cola(cola)
-    return jsonify({'ok': True, 'total': len(cola)})
+        try:
+            def eliminar(cola):
+                cola_id = data.get('_cola_id')
+                if cola_id:
+                    indice = next(
+                        (i for i, item in enumerate(cola) if item.get('_cola_id') == cola_id),
+                        None
+                    )
+                else:
+                    indice = data.get('index', -1)
+                if not isinstance(indice, int) or not 0 <= indice < len(cola):
+                    return cola, len(cola), False
+                cola.pop(indice)
+                return cola, len(cola), True
+
+            total = actualizar_cola_github(eliminar)
+            return jsonify({'ok': True, 'total': total})
+        except (requests.RequestException, ValueError, KeyError, RuntimeError) as e:
+            print('[ERROR Cola GitHub] ' + str(e))
+            return jsonify({'error': 'No se pudo eliminar el producto de GitHub: ' + str(e)}), 502
 
 @app.route('/publicar', methods=['POST'])
 def publicar():

@@ -1,6 +1,6 @@
 # Publicacion gratuita con GitHub Actions
 
-Esta configuracion permite poner productos en cola desde el movil y publicarlos en Telegram, Facebook e Instagram sin mantener encendido el ordenador ni contratar Railway.
+Esta configuración permite añadir productos desde el panel Flask del ordenador o desde GitHub y publicarlos en Telegram, Facebook e Instagram mediante GitHub Actions, sin mantener encendido el ordenador ni contratar Railway.
 
 ## Configuracion inicial
 
@@ -12,9 +12,9 @@ Esta configuracion permite poner productos en cola desde el movil y publicarlos 
    - `META_PAGE_ACCESS_TOKEN`: token de acceso de la página de Meta (opcional; necesario para Facebook o Instagram).
    - `META_INSTAGRAM_ACCOUNT_ID`: ID de la cuenta profesional de Instagram (opcional).
 3. En **Settings > Actions > General**, permite las acciones y el permiso de escritura de contenidos si el repositorio lo restringe.
-4. En **Actions**, ejecuta una vez **Añadir producto a la cola** para confirmar que el formulario funciona.
+4. En **Actions**, ejecuta una vez **Añadir producto a la cola** para confirmar que el formulario funciona. También puedes añadirlos desde el panel Flask local.
 
-No guardes los secretos en archivos del repositorio ni en GitHub Pages. El token de GitHub para que los workflows actualicen la cola lo proporciona Actions automáticamente.
+No guardes los secretos en archivos del repositorio ni en GitHub Pages. Los workflows usan el token automático de Actions; el panel local necesita `GITHUB_TOKEN` para leer y actualizar la cola del repositorio.
 
 Para usar Instagram, la cuenta debe ser profesional (empresa o creador), estar vinculada a una página de Facebook y tener los permisos de publicación concedidos a tu aplicación de Meta. La API solo acepta imágenes JPEG accesibles públicamente mediante HTTPS; si no hay imagen, Instagram no publicará ese producto. Facebook sí admite publicaciones sin imagen.
 
@@ -40,26 +40,25 @@ Si publicas desde el panel Flask (`app.py`), configura también `GITHUB_TOKEN` y
    - `BOT_TOKEN`: el token del bot de Telegram que ya utilizas.
    - `CHAT_ID`: el identificador de tu canal o chat.
    - `META_PAGE_ID`, `META_PAGE_ACCESS_TOKEN` y/o `META_INSTAGRAM_ACCOUNT_ID`, según los canales que vayas a utilizar.
-3. Vuelve a abrir `arrancar_bot.bat`. El lanzador carga las variables de usuario guardadas en Windows, así que no hace falta cerrar sesión. Deja abierta la ventana de consola mientras uses el panel. Si falta `GITHUB_TOKEN`, Telegram seguirá funcionando, pero el historial web no se actualizará. Si falta `BOT_TOKEN` o `CHAT_ID`, el lanzador avisará y no iniciará el bot.
+3. Vuelve a abrir `arrancar_bot.bat`. El lanzador carga las variables de usuario guardadas en Windows, así que no hace falta cerrar sesión. Deja abierta la ventana de consola mientras uses el panel. Si falta `GITHUB_TOKEN`, el panel no podrá cargar ni actualizar la cola compartida ni guardar el historial web. Si falta `BOT_TOKEN` o `CHAT_ID`, el lanzador avisará y no iniciará el bot.
 
-El token se usa para actualizar el archivo `ofertas.json` que lee la web. Si falta, es incorrecto o GitHub rechaza los permisos, al abrir el bot se mostrará un aviso o el panel explicará el error de GitHub.
+El token se usa para actualizar `cola.json` y `ofertas.json` en GitHub. Si falta, es incorrecto o GitHub rechaza los permisos, el panel mostrará un error al cargar o modificar la cola.
 
 ## Desplegar el panel Flask en un servidor
 
-El `Procfile` inicia el programador junto con la web. Configura en el servidor las mismas variables de entorno (`BOT_TOKEN`, `CHAT_ID` y, si corresponde, las variables de GitHub y Meta). Mantén un solo worker de Gunicorn: cada worker adicional iniciaría otro programador y podría publicar la misma franja más de una vez. El servidor debe mantener activo el proceso web para que se ejecuten las publicaciones programadas.
+El `Procfile` inicia únicamente la web Flask; GitHub Actions es el único programador automático. Configura en el servidor las variables necesarias para el panel. No actives otro programador en Railway u otro servidor, porque podría duplicar publicaciones.
 
 ## Añadir un producto desde el movil
 
-1. Abre el repositorio en GitHub e inicia sesion.
-2. Entra en **Actions > Añadir producto a la cola > Run workflow**.
-3. Rellena título, enlace directo de Amazon.es, precio e imagen opcionales, y categoría.
-4. Pulsa **Run workflow**. La accion añade el producto a `cola.json` y crea un commit.
+Para el uso habitual, añade el producto en `http://192.168.1.141:8080/` y pulsa **Añadir a cola**. El panel guarda el producto en `cola.json` en GitHub; la cola que ves en el panel es esa misma cola compartida. No necesitas copiar el producto ni ejecutar manualmente el workflow. El PC debe estar encendido para usar el panel, pero no para que GitHub Actions publique.
+
+Como alternativa, puedes abrir **Actions > Añadir producto a la cola > Run workflow**, rellenar los datos y pulsar **Run workflow**.
 
 El enlace debe ser de un producto de Amazon.es. Si contiene un ASIN en la ruta, se convierte a un enlace directo con la etiqueta `lonecesitoya-21`. No introduzcas credenciales en el formulario.
 
 ## Publicación programada
 
-El workflow comprueba cada 15 minutos si hay una franja pendiente y publica como máximo un producto por franja. Hay 12 franjas diarias, aproximadamente cada 80 minutos, entre las 08:00 y las 22:40 de `Europe/Madrid` (ventana de 08:00 a 23:00). El cron usa minutos desplazados (`:07`, `:22`, `:37` y `:52`) para evitar los minutos de mayor carga de GitHub, y el workflow también se puede iniciar manualmente desde **Actions > Publicar ofertas... > Run workflow**. GitHub puede retrasar o incluso omitir eventos programados; el horario no está garantizado. Si se acumulan franjas vencidas, se intentan en orden desde la más antigua, una por ejecución. Si no hay productos en cola, la franja se omite. La publicación y la acción de añadir productos comparten un grupo de concurrencia para evitar que ambas actualicen `cola.json` al mismo tiempo.
+El workflow comprueba cada 15 minutos si hay una franja pendiente y publica como máximo un producto por franja. Hay 12 franjas diarias, aproximadamente cada 80 minutos, entre las 08:00 y las 22:40 de `Europe/Madrid` (ventana de 08:00 a 23:00). El cron usa minutos desplazados (`:07`, `:22`, `:37` y `:52`) para evitar los minutos de mayor carga de GitHub, y el workflow también se puede iniciar manualmente desde **Actions > Publicar ofertas... > Run workflow**. GitHub puede retrasar o incluso omitir eventos programados; el horario no está garantizado. Si se acumulan franjas vencidas, se intentan en orden desde la más antigua, una por ejecución. Si no hay productos en cola, la franja se omite. Los workflows de añadir y publicar comparten un grupo de concurrencia; el panel local actualiza `cola.json` mediante la API de GitHub y reintenta si el archivo cambia durante una actualización.
 
 Al publicar, el workflow actualiza `cola.json`, `estado_publicacion.json` y `ofertas.json` en el repositorio. Si Instagram no puede publicar un producto (por ejemplo, porque falta una imagen pública HTTPS o el texto excede el límite), se omite Instagram y el producto continúa por los demás canales; Instagram se marca como procesado para que no vuelva a bloquear ni se reintente ese producto. Si falla Telegram o Facebook, la franja no se marca como procesada y el producto sigue en la cola; el workflow guarda el progreso para no repetir los canales que ya publicaron.
 
@@ -67,4 +66,4 @@ Si aparece `Bad Request: chat not found`, revisa que el secreto `CHAT_ID` identi
 
 El panel «Publicar ahora» utiliza los mismos canales y guarda el progreso de cada intento localmente para no repetir publicaciones al reintentar. La publicación puede tardar mientras Instagram procesa la imagen. Si falta la configuración de Meta, ese canal queda desactivado; si Instagram está configurado pero no acepta un producto, se omite ese canal y se continúa con los demás.
 
-El repositorio usado para la web puede seguir en GitHub Pages. Pages solo muestra el sitio estático; la cola se administra desde el formulario de GitHub Actions.
+El repositorio usado para la web puede seguir en GitHub Pages. Pages solo muestra el sitio estático; el panel Flask local y GitHub Actions comparten `cola.json`.

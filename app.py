@@ -4,14 +4,18 @@ import requests
 import re
 import os
 import json
-import json
 import base64
 import hashlib
 import threading
 import time
 import uuid
 from datetime import datetime
-from programador import COLA_LOCK, iniciar_programador, publicar_producto
+from programador import (
+    COLA_LOCK,
+    bloqueo_publicaciones,
+    iniciar_programador,
+    publicar_producto
+)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.environ.get('DATA_DIR', BASE_DIR)
@@ -375,18 +379,21 @@ def anadir_cola():
     producto['_cola_id'] = cola_id
 
     with COLA_LOCK:
-        try:
-            def anadir(cola):
-                if any(item.get('_cola_id') == cola_id for item in cola):
-                    return cola, len(cola), False
-                cola.append(producto)
-                return cola, len(cola), True
+        with bloqueo_publicaciones() as adquirido:
+            if not adquirido:
+                return jsonify({'error': 'Hay una publicación en curso; vuelve a intentarlo en unos instantes.'}), 409
+            try:
+                def anadir(cola):
+                    if any(item.get('_cola_id') == cola_id for item in cola):
+                        return cola, len(cola), False
+                    cola.append(producto)
+                    return cola, len(cola), True
 
-            total = actualizar_cola_github(anadir)
-            return jsonify({'ok': True, 'total': total})
-        except (requests.RequestException, ValueError, KeyError, RuntimeError) as e:
-            print('[ERROR Cola GitHub] ' + str(e))
-            return jsonify({'error': 'No se pudo guardar el producto en GitHub: ' + str(e)}), 502
+                total = actualizar_cola_github(anadir)
+                return jsonify({'ok': True, 'total': total})
+            except (requests.RequestException, ValueError, KeyError, RuntimeError) as e:
+                print('[ERROR Cola GitHub] ' + str(e))
+                return jsonify({'error': 'No se pudo guardar el producto en GitHub: ' + str(e)}), 502
 
 @app.route('/cola/eliminar', methods=['POST'])
 def eliminar_cola():
@@ -395,26 +402,29 @@ def eliminar_cola():
         return jsonify({'error': 'La solicitud no contiene datos JSON válidos.'}), 400
 
     with COLA_LOCK:
-        try:
-            def eliminar(cola):
-                cola_id = data.get('_cola_id')
-                if cola_id:
-                    indice = next(
-                        (i for i, item in enumerate(cola) if item.get('_cola_id') == cola_id),
-                        None
-                    )
-                else:
-                    indice = data.get('index', -1)
-                if not isinstance(indice, int) or not 0 <= indice < len(cola):
-                    return cola, len(cola), False
-                cola.pop(indice)
-                return cola, len(cola), True
+        with bloqueo_publicaciones() as adquirido:
+            if not adquirido:
+                return jsonify({'error': 'Hay una publicación en curso; vuelve a intentarlo en unos instantes.'}), 409
+            try:
+                def eliminar(cola):
+                    cola_id = data.get('_cola_id')
+                    if cola_id:
+                        indice = next(
+                            (i for i, item in enumerate(cola) if item.get('_cola_id') == cola_id),
+                            None
+                        )
+                    else:
+                        indice = data.get('index', -1)
+                    if not isinstance(indice, int) or not 0 <= indice < len(cola):
+                        return cola, len(cola), False
+                    cola.pop(indice)
+                    return cola, len(cola), True
 
-            total = actualizar_cola_github(eliminar)
-            return jsonify({'ok': True, 'total': total})
-        except (requests.RequestException, ValueError, KeyError, RuntimeError) as e:
-            print('[ERROR Cola GitHub] ' + str(e))
-            return jsonify({'error': 'No se pudo eliminar el producto de GitHub: ' + str(e)}), 502
+                total = actualizar_cola_github(eliminar)
+                return jsonify({'ok': True, 'total': total})
+            except (requests.RequestException, ValueError, KeyError, RuntimeError) as e:
+                print('[ERROR Cola GitHub] ' + str(e))
+                return jsonify({'error': 'No se pudo eliminar el producto de GitHub: ' + str(e)}), 502
 
 @app.route('/publicar', methods=['POST'])
 def publicar():

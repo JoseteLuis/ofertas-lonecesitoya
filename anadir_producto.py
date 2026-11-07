@@ -1,10 +1,9 @@
-import json
 import os
 import re
-import tempfile
+import uuid
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
-from programador import CATEGORIAS, COLA_FILE
+from programador import CATEGORIAS, actualizar_cola_github, bloqueo_publicaciones
 
 
 def crear_enlace_afiliado(url, etiqueta):
@@ -23,14 +22,6 @@ def crear_enlace_afiliado(url, etiqueta):
     return urlunparse(parsed._replace(query=urlencode(params, doseq=True))), ''
 
 
-def leer_cola_actual():
-    try:
-        with open(COLA_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except FileNotFoundError:
-        return []
-
-
 def anadir_desde_variables():
     titulo = os.environ.get('INPUT_TITULO', '').strip()
     url = os.environ.get('INPUT_URL', '').strip()
@@ -45,38 +36,42 @@ def anadir_desde_variables():
         raise ValueError('La categoría indicada no es válida.')
 
     url_afiliado, asin = crear_enlace_afiliado(url, etiqueta)
-    cola = leer_cola_actual()
-    if asin and any(
-        producto.get('asin') == asin
-        or re.search(r'/(?:dp|gp/product|gp/aw/d)/' + asin + r'(?:/|$)', producto.get('url', ''), re.IGNORECASE)
-        for producto in cola
-    ):
-        print('[INFO] El producto ya está en la cola.')
-        return
-
     producto = {
         'titulo': titulo,
         'precio': precio,
         'url': url_afiliado,
         'imagen': imagen,
         'categoria': categoria,
+        '_cola_id': str(uuid.uuid4()),
     }
     if asin:
         producto['asin'] = asin
 
-    cola.append(producto)
-    os.makedirs(os.path.dirname(COLA_FILE), exist_ok=True)
-    fd, temp_path = tempfile.mkstemp(prefix='cola-', suffix='.json', dir=os.path.dirname(COLA_FILE))
-    try:
-        with os.fdopen(fd, 'w', encoding='utf-8') as f:
-            json.dump(cola, f, ensure_ascii=False, indent=2)
-        os.replace(temp_path, COLA_FILE)
-    finally:
-        if os.path.exists(temp_path):
-            os.remove(temp_path)
+    with bloqueo_publicaciones() as adquirido:
+        if not adquirido:
+            raise RuntimeError('Hay una publicación en curso; vuelve a ejecutar el workflow en unos instantes.')
 
+        def anadir(cola):
+            if asin and any(
+                existente.get('asin') == asin
+                or re.search(
+                    r'/(?:dp|gp/product|gp/aw/d)/' + asin + r'(?:/|$)',
+                    existente.get('url', ''),
+                    re.IGNORECASE
+                )
+                for existente in cola
+            ):
+                return cola, {'added': False, 'total': len(cola)}, False
+            cola.append(producto)
+            return cola, {'added': True, 'total': len(cola)}, True
+
+        resultado = actualizar_cola_github(anadir)
+
+    if not resultado['added']:
+        print('[INFO] El producto ya está en la cola.')
+        return
     print('[OK] Producto añadido a la cola: ' + titulo)
-    print('[INFO] Productos en cola: ' + str(len(cola)))
+    print('[INFO] Productos en cola: ' + str(resultado['total']))
 
 
 if __name__ == '__main__':

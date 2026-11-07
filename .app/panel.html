@@ -148,6 +148,7 @@ let hashActual = '#hogar #casa #amazon #oferta #decoracion';
 let urlAfiliado = '';
 let imagenUrl = '';
 let publicacionPendienteSesion = null;
+let solicitudColaPendiente = null;
 
 function cambiarTab(nombre, el) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -292,10 +293,23 @@ async function anadirCola() {
   const url = urlAfiliado || document.getElementById('urlInput').value.trim();
   if (!url) { mostrarStatus('statusPublicar', 'Pega una URL primero', 'err'); return; }
   try {
-    const res = await fetch('/cola/anadir', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(getProductoActual()) });
+    const producto = getProductoActual();
+    const huella = JSON.stringify(producto);
+    if (!solicitudColaPendiente || solicitudColaPendiente.huella !== huella) {
+      const id = window.crypto && crypto.randomUUID
+        ? crypto.randomUUID()
+        : Date.now() + '-' + Math.random().toString(36).slice(2);
+      solicitudColaPendiente = { id, huella };
+    }
+    producto._cola_id = solicitudColaPendiente.id;
+    const res = await fetch('/cola/anadir', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(producto) });
     const data = await res.json();
-    if (data.ok) { mostrarStatus('statusPublicar', 'Añadido a la cola. Total: ' + data.total + ' productos', 'ok'); actualizarBadge(data.total); limpiarTodo(); }
-  } catch(e) { mostrarStatus('statusPublicar', 'Error de conexion', 'err'); }
+    if (!res.ok || !data.ok) throw new Error(data.error || 'No se pudo guardar el producto.');
+    solicitudColaPendiente = null;
+    mostrarStatus('statusPublicar', 'Añadido a la cola de GitHub. Total: ' + data.total + ' productos. Se publicará en la próxima ejecución automática.', 'ok');
+    actualizarBadge(data.total);
+    limpiarTodo();
+  } catch(e) { mostrarStatus('statusPublicar', 'Error al guardar en la cola de GitHub: ' + e.message, 'err'); }
 }
 
 function getProductoActual() {
@@ -306,6 +320,7 @@ async function cargarCola() {
   try {
     const res = await fetch('/cola');
     const cola = await res.json();
+    if (!res.ok || !Array.isArray(cola)) throw new Error(cola.error || 'Respuesta inesperada del servidor.');
     actualizarBadge(cola.length);
     const el = document.getElementById('listaColaEl');
     if (!cola.length) { el.innerHTML = '<div class="cola-vacia"><div class="ico">📭</div><p>La cola esta vacia.</p></div>'; return; }
@@ -314,14 +329,25 @@ async function cargarCola() {
       (p.imagen ? '<img src="' + p.imagen + '" onerror="this.style.display=\'none\'">' : '') +
       '<div class="cola-item-info"><div class="cola-item-titulo">' + (p.titulo || p.url) + '</div>' +
       '<div class="cola-item-meta">' + (EMOJIS[p.categoria] || '') + ' ' + p.categoria + (p.precio ? ' · ' + p.precio : '') + '</div></div>' +
-      '<button class="btn-eliminar" onclick="eliminarCola(' + i + ')">Eliminar</button></div>'
+      '<button class="btn-eliminar" onclick="eliminarCola(' + (p._cola_id ? "'" + p._cola_id + "'" : i) + ')">Eliminar</button></div>'
     ).join('');
-  } catch(e) {}
+  } catch(e) {
+    console.error('No se pudo cargar la cola de GitHub.', e);
+    document.getElementById('listaColaEl').innerHTML = '<div class="status err">No se pudo cargar la cola de GitHub: ' + e.message + '</div>';
+  }
 }
 
-async function eliminarCola(idx) {
-  await fetch('/cola/eliminar', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({index: idx}) });
-  cargarCola();
+async function eliminarCola(id) {
+  try {
+    const dato = typeof id === 'string' ? {_cola_id: id} : {index: id};
+    const res = await fetch('/cola/eliminar', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(dato) });
+    const resultado = await res.json();
+    if (!res.ok || !resultado.ok) throw new Error(resultado.error || 'No se pudo eliminar el producto.');
+    await cargarCola();
+  } catch(e) {
+    console.error('No se pudo eliminar el producto de la cola de GitHub.', e);
+    document.getElementById('listaColaEl').innerHTML = '<div class="status err">No se pudo eliminar el producto: ' + e.message + '</div>';
+  }
 }
 
 function actualizarBadge(n) {
@@ -345,7 +371,7 @@ function limpiarTodo() {
   urlAfiliado = ''; imagenUrl = '';
 }
 
-fetch('/cola').then(r => r.json()).then(c => actualizarBadge(c.length)).catch(()=>{});
+cargarCola();
 </script>
 <a class="whatsapp-link" href="https://whatsapp.com/channel/0029Vb9RnHjDeONDM9hbhY2v" target="_blank" rel="noopener noreferrer" aria-label="Únete a nuestro canal de WhatsApp">
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">

@@ -227,7 +227,7 @@ def guardar_en_github(oferta):
 
 @app.route('/')
 def index():
-    ruta = os.path.join(BASE_DIR, 'index.html')
+    ruta = os.path.join(BASE_DIR, '.app', 'panel.html')
     with open(ruta, 'r', encoding='utf-8') as f:
         contenido = f.read()
     return contenido, 200, {'Content-Type': 'text/html; charset=utf-8'}

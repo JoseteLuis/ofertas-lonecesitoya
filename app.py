@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from playwright.sync_api import sync_playwright
 import requests
 import re
@@ -112,6 +112,7 @@ def extraer_producto(url):
         titulo = ''
         precio = ''
         imagen = ''
+        descripcion = ''
         try:
             page.goto(url, wait_until='domcontentloaded', timeout=30000)
             page.wait_for_timeout(3000)
@@ -122,23 +123,62 @@ def extraer_producto(url):
                         break
                 except:
                     pass
-            for selector in ['#priceblock_ourprice','#priceblock_dealprice','.a-price .a-offscreen','#price_inside_buybox','.reinventPricePriceToPayMargin .a-offscreen']:
+            if not titulo:
+                try:
+                    titulo = page.locator('meta[property="og:title"]').get_attribute(
+                        'content', timeout=3000
+                    ) or ''
+                except:
+                    pass
+            for selector in [
+                '#corePriceDisplay_desktop_feature_div .a-offscreen',
+                '#corePrice_feature_div .a-offscreen',
+                '#apex_desktop .a-offscreen',
+                '.priceToPay .a-offscreen',
+                '#priceblock_ourprice',
+                '#priceblock_dealprice',
+                '.a-price .a-offscreen',
+                '#price_inside_buybox',
+                '.reinventPricePriceToPayMargin .a-offscreen'
+            ]:
                 try:
                     precio = page.locator(selector).first.inner_text(timeout=3000).strip()
                     if precio:
                         break
                 except:
                     pass
-            for selector in ['#landingImage','#imgBlkFront','.a-dynamic-image']:
+            for selector in ['#landingImage', '#imgBlkFront', '.a-dynamic-image']:
                 try:
                     imagen = page.locator(selector).first.get_attribute('src', timeout=3000)
                     if imagen and imagen.startswith('http'):
                         break
                 except:
                     pass
+            for selector in [
+                '#feature-bullets ul li:not(.aok-hidden) span.a-list-item',
+                '#feature-bullets .a-list-item',
+                '#productDescription'
+            ]:
+                try:
+                    elementos = page.locator(selector)
+                    for indice in range(min(elementos.count(), 4)):
+                        texto = elementos.nth(indice).inner_text(timeout=2000).strip()
+                        if texto and texto not in descripcion:
+                            descripcion += ('\n' if descripcion else '') + texto
+                    if descripcion:
+                        break
+                except:
+                    pass
+            if not descripcion:
+                try:
+                    descripcion = page.locator(
+                        'meta[name="description"]'
+                    ).get_attribute('content', timeout=3000) or ''
+                except:
+                    pass
         finally:
             browser.close()
-        return titulo, precio, imagen
+        return titulo, precio, imagen, descripcion
 
 def guardar_en_github(oferta):
     github_token = os.environ.get('GITHUB_TOKEN', '').strip()
@@ -163,6 +203,12 @@ def guardar_en_github(oferta):
     else:
         r.raise_for_status()
 
+    identificador = oferta.get('publicacion_id')
+    if identificador and any(
+        existente.get('publicacion_id') == identificador for existente in contenido
+    ):
+        return True
+
     contenido.insert(0, oferta)
     contenido = contenido[:500]
 
@@ -186,6 +232,10 @@ def index():
         contenido = f.read()
     return contenido, 200, {'Content-Type': 'text/html; charset=utf-8'}
 
+@app.route('/Fondo.jpg')
+def fondo():
+    return send_from_directory(BASE_DIR, 'Fondo.jpg', mimetype='image/jpeg')
+
 @app.route('/extraer', methods=['POST'])
 def extraer():
     data = request.json
@@ -194,9 +244,16 @@ def extraer():
         return jsonify({'error': 'URL vacia'}), 400
     url_afiliado = limpiar_url(url_original)
     try:
-        titulo, precio, imagen = extraer_producto(url_original)
+        titulo, precio, imagen, descripcion = extraer_producto(url_original)
         categoria = detectar_categoria(titulo)
-        return jsonify({'titulo': titulo, 'precio': precio, 'imagen': imagen, 'url': url_afiliado, 'categoria': categoria})
+        return jsonify({
+            'titulo': titulo,
+            'precio': precio,
+            'imagen': imagen,
+            'desc': descripcion,
+            'url': url_afiliado,
+            'categoria': categoria
+        })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -283,6 +340,7 @@ def publicar():
     producto = {
         'titulo': titulo,
         'precio': precio,
+        'desc': desc,
         'url': url,
         'imagen': imagen,
         'categoria': categoria
@@ -308,6 +366,7 @@ def publicar():
 
         canales_publicados = set(estado.get('canales_publicados', []))
         publicaciones[publicacion_id] = {
+            **estado,
             'huella': huella,
             'canales_publicados': sorted(canales_publicados),
             'completada': False,
@@ -325,6 +384,32 @@ def publicar():
             }
             guardar_publicaciones_manuales(publicaciones)
 
+        def guardar_historial():
+            if publicaciones[publicacion_id].get('historial_guardado'):
+                return True, ''
+            oferta = {
+                'titulo': titulo,
+                'precio': precio,
+                'desc': desc,
+                'url': url,
+                'imagen': imagen,
+                'categoria': categoria,
+                'fecha': datetime.now().isoformat(),
+                'publicacion_id': publicacion_id
+            }
+            try:
+                guardado = guardar_en_github(oferta)
+            except (requests.RequestException, ValueError, KeyError) as e:
+                detalle_error = describir_error_github(e)
+                print('[ERROR Historial GitHub] ' + detalle_error)
+                return False, detalle_error
+            if guardado:
+                publicaciones[publicacion_id]['historial_guardado'] = True
+                publicaciones[publicacion_id]['actualizada'] = datetime.now().isoformat()
+                guardar_publicaciones_manuales(publicaciones)
+                return True, ''
+            return False, 'Comprueba que GITHUB_TOKEN tenga permiso Contents: Read and write.'
+
         if not publicar_producto(
             producto,
             mensaje_extra=desc,
@@ -332,41 +417,35 @@ def publicar():
             guardar_progreso=guardar_progreso,
             guardar_historial=False
         ):
+            web_actualizada = False
+            aviso_web = ''
+            if canales_publicados:
+                web_actualizada, aviso_web = guardar_historial()
             return jsonify({
                 'error': 'No se pudo completar la publicación. Revisa la consola del bot y vuelve a intentarlo.',
-                'canales_publicados': sorted(canales_publicados)
+                'canales_publicados': sorted(canales_publicados),
+                'web_actualizada': web_actualizada,
+                'warning': aviso_web
+            }), 502
+
+        historial_guardado, detalle = guardar_historial()
+
+        if not historial_guardado:
+            return jsonify({
+                'error': 'Se publicaron los canales sociales, pero no se pudo actualizar la web.',
+                'canales_publicados': sorted(canales_publicados),
+                'web_actualizada': False,
+                'warning': detalle
             }), 502
 
         publicaciones[publicacion_id]['completada'] = True
         publicaciones[publicacion_id]['actualizada'] = datetime.now().isoformat()
         guardar_publicaciones_manuales(publicaciones)
-
-        oferta = {
-            'titulo': titulo,
-            'precio': precio,
-            'url': url,
-            'imagen': imagen,
-            'categoria': categoria,
-            'fecha': datetime.now().isoformat()
-        }
-        try:
-            historial_guardado = guardar_en_github(oferta)
-        except (requests.RequestException, ValueError, KeyError) as e:
-            detalle = describir_error_github(e)
-            print('[ERROR Historial GitHub] ' + detalle)
-            historial_guardado = False
-        else:
-            detalle = ''
-
-        if not historial_guardado:
-            return jsonify({
-                'ok': True,
-                'canales_publicados': sorted(canales_publicados),
-                'warning': 'La oferta se publicó, pero la web no se actualizó. '
-                           + (detalle or 'Comprueba la configuración de GITHUB_TOKEN.')
-            })
-
-        return jsonify({'ok': True, 'canales_publicados': sorted(canales_publicados)})
+        return jsonify({
+            'ok': True,
+            'canales_publicados': sorted(canales_publicados),
+            'web_actualizada': True
+        })
 
 if os.environ.get('RUN_SCHEDULER', '').lower() in ('1', 'true', 'yes'):
     iniciar_programador()

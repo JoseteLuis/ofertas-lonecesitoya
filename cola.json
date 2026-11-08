@@ -1,19 +1,5 @@
 [
   {
-    "titulo": "CITÉTOILE Abrigo para Perro Invierno con Paso de Correa Rojo XL",
-    "precio": "36,64€",
-    "desc": "Mantener caliente y cómodo: Este abrigo para perros de invierno está fabricado en poliéster de alta calidad con forro polar grueso que proporciona calidez sin peso, protegiendo eficazmente a su mascota del frío y el viento gracias a su diseño bien cosido y acabados impecables.\nDiseño de estilo de celosía: este abrigo de perro de invierno tiene un escote de cordero, lo que agrega elegancia. El diseño de celosía escocesa es ideal para Navidad y celebraciones.\nAdecuado para varios tamaños: Disponible en 5 tallas con correas de nylon ajustables en cuello y pecho para máxima comodidad. Para garantizar el mejor ajuste, le sugerimos medir a su mascota y consultar nuestra detallada guía de tallas antes de comprar.\nAbrigo a prueba de viento: Chaleco para perros a prueba de viento, adecuado para invierno, primavera y otoño, con agujeros de cuero pu, que permiten pasear a los perros de forma segura, muy adecuado para actividades interiores y Exteriores.",
-    "url": "https://link.amazon/B00xvK1Lp?tag=lonecesitoya-21",
-    "categoria": "moda",
-    "imagen": "https://m.media-amazon.com/images/I/71RkHut68fL._AC_SX522_.jpg",
-    "_cola_id": "b5e9fa46-8104-458a-8a67-0fb23635d9ff",
-    "_publicado_en": [
-      "telegram",
-      "facebook",
-      "instagram"
-    ]
-  },
-  {
     "titulo": "Safeliveo Detector de Humo interconectado WiFi, Detector de Humo con batería de 10 años, Juego de 3 con estación Base, Certificado TUV Rheinland, Juego de Alarma de Humo con Control por aplicación.",
     "precio": "41,39€",
     "desc": "Controle la seguridad de su hogar en cualquier momento y lugar: Recibirá notificaciones en su teléfono inteligente si el minisistema de alarma contra incendios inteligente activa la alarma. No importa dónde se encuentre, puede recibir las advertencias de la aplicación siempre que su teléfono inteligente pueda navegar por Internet. Tome medidas efectivas a tiempo para reducir las pérdidas.\nControl de la App: todo es más fácil con la ayuda de la App. Especialmente amigable para personas mayores. Ya no es necesario subir escaleras para probar o silenciar el detector de humo. Con solo un clic en la App, puede probar el detector de humo, silenciarlo, verificar el estado del detector de humo, etc.\nConjunto de detectores de humo interconectados de forma inalámbrica: se pueden agregar hasta 20 detectores de humo al sistema. Si una de las alarmas de humo del minisistema de alerta temprana contra incendios detecta humo, todos los detectores de humo y la estación base activarán una alarma sonora fuerte con un LED rojo parpadeante. La función interconectada funciona bien incluso si la conexión a Internet por WiFi es defectuosa, pero no se envían notificaciones a su teléfono.\nDetectores de humo con batería de 10 años de duración: Los detectores de humo están equipados con un sensor fotoeléctrico de alta calidad de 10 años de duración y una batería de litio de 10 años de duración. Menos falsas alarmas y no es necesario cambiar la batería durante su vida útil.",
@@ -214,5 +200,19 @@
     "categoria": "hogar",
     "imagen": "https://m.media-amazon.com/images/I/41pijwyT7XL._AC_SX679_.jpg",
     "_cola_id": "1794064653247-w38dnfylggq"
+  },
+  {
+    "titulo": "CITÉTOILE Abrigo para Perro Invierno con Paso de Correa Rojo XL",
+    "precio": "36,64€",
+    "desc": "Mantener caliente y cómodo: Este abrigo para perros de invierno está fabricado en poliéster de alta calidad con forro polar grueso que proporciona calidez sin peso, protegiendo eficazmente a su mascota del frío y el viento gracias a su diseño bien cosido y acabados impecables.\nDiseño de estilo de celosía: este abrigo de perro de invierno tiene un escote de cordero, lo que agrega elegancia. El diseño de celosía escocesa es ideal para Navidad y celebraciones.\nAdecuado para varios tamaños: Disponible en 5 tallas con correas de nylon ajustables en cuello y pecho para máxima comodidad. Para garantizar el mejor ajuste, le sugerimos medir a su mascota y consultar nuestra detallada guía de tallas antes de comprar.\nAbrigo a prueba de viento: Chaleco para perros a prueba de viento, adecuado para invierno, primavera y otoño, con agujeros de cuero pu, que permiten pasear a los perros de forma segura, muy adecuado para actividades interiores y Exteriores.",
+    "url": "https://link.amazon/B00xvK1Lp?tag=lonecesitoya-21",
+    "categoria": "moda",
+    "imagen": "https://m.media-amazon.com/images/I/71RkHut68fL._AC_SX522_.jpg",
+    "_cola_id": "b5e9fa46-8104-458a-8a67-0fb23635d9ff",
+    "_publicado_en": [
+      "telegram",
+      "facebook",
+      "instagram"
+    ]
   }
 ]

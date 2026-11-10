@@ -37,7 +37,7 @@ def ejecutar():
             'sin repetir los canales que ya publicaron.'
         )
     if resultado is None:
-        print('[INFO] No se publicó: la franja ya se procesó o la otra instancia mantiene el bloqueo.')
+        print('[INFO] No se publicó en esta ejecución; consulta los mensajes anteriores para conocer el motivo.')
 
 
 if __name__ == '__main__':

@@ -564,6 +564,10 @@ def procesar_franja(horario):
         if resultado is False:
             return False
 
+        if resultado is None:
+            print('[INFO] Cola vacía; la franja no se marcará como procesada.')
+            return None
+
         guardar_estado_publicacion(horario)
         print('[INFO] Franja procesada: ' + horario)
         return resultado

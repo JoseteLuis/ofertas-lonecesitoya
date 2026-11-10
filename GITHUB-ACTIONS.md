@@ -1,6 +1,6 @@
 # Publicacion gratuita con GitHub Actions
 
-Esta configuración permite añadir productos desde el panel Flask del ordenador o desde GitHub y publicarlos en Telegram, Facebook e Instagram mediante GitHub Actions, sin mantener encendido el ordenador ni contratar Railway.
+Esta configuración permite añadir productos desde el panel Flask del ordenador o desde GitHub y publicarlos en Telegram, Facebook e Instagram. Puedes usar GitHub Actions y el programador del `.bat` a la vez: ambos leen la misma cola y comparten el bloqueo y el estado de cada franja para evitar que publiquen el mismo producto por duplicado.
 
 ## Configuracion inicial
 
@@ -12,7 +12,7 @@ Esta configuración permite añadir productos desde el panel Flask del ordenador
    - `META_PAGE_ACCESS_TOKEN`: token de acceso de la página de Meta (opcional; necesario para Facebook o Instagram).
    - `META_INSTAGRAM_ACCOUNT_ID`: ID de la cuenta profesional de Instagram (opcional).
 3. En **Settings > Actions > General**, permite las acciones y el permiso de escritura de contenidos si el repositorio lo restringe.
-4. En **Actions**, ejecuta una vez **Añadir producto a la cola** para confirmar que el formulario funciona. También puedes añadirlos desde el panel Flask local.
+4. No hace falta iniciar workflows manualmente para las publicaciones programadas. El workflow **Añadir producto a la cola** es opcional; puedes seguir añadiendo productos desde el panel Flask local.
 
 No guardes los secretos en archivos del repositorio ni en GitHub Pages. Los workflows usan el token automático de Actions; el panel local necesita `GITHUB_TOKEN` para leer y actualizar la cola del repositorio.
 
@@ -44,13 +44,15 @@ Si publicas desde el panel Flask (`app.py`), configura también `GITHUB_TOKEN` y
 
 El token se usa para actualizar `cola.json` y `ofertas.json` en GitHub. Si falta, es incorrecto o GitHub rechaza los permisos, el panel mostrará un error al cargar o modificar la cola.
 
-## Desplegar el panel Flask en un servidor
+## Programador local y GitHub Actions
 
-El `Procfile` inicia únicamente la web Flask; GitHub Actions es el único programador automático. Configura en el servidor las variables necesarias para el panel. No actives otro programador en Railway u otro servidor, porque podría duplicar publicaciones.
+`arrancar_bot.bat` inicia el panel Flask y activa el programador local. El ordenador debe permanecer encendido, conectado a Internet y con la ventana del `.bat` abierta para que el programador local publique. GitHub Actions también puede publicar aunque el ordenador esté apagado. Ambos usan la cola y el estado guardados en GitHub; antes de procesar una franja adquieren un bloqueo compartido.
+
+El `Procfile` inicia únicamente la web Flask. No actives un programador adicional en Railway u otro servidor: el programador local y GitHub Actions ya cubren las dos ejecuciones automáticas solicitadas.
 
 ## Añadir un producto desde el movil
 
-Para el uso habitual, añade el producto en `http://192.168.1.141:8080/` y pulsa **Añadir a cola**. El panel guarda el producto en `cola.json` en GitHub; la cola que ves en el panel es esa misma cola compartida. No necesitas copiar el producto ni ejecutar manualmente el workflow. El PC debe estar encendido para usar el panel, pero no para que GitHub Actions publique.
+Para el uso habitual, añade el producto en `http://192.168.1.141:8080/` y pulsa **Añadir a cola**. El panel guarda el producto en `cola.json` en GitHub; la cola que ves en el panel es esa misma cola compartida. No necesitas copiar el producto ni ejecutar manualmente el workflow. El PC debe estar encendido para usar el panel y para que publique el programador local, pero no para que GitHub Actions publique.
 
 Como alternativa, puedes abrir **Actions > Añadir producto a la cola > Run workflow**, rellenar los datos y pulsar **Run workflow**.
 
@@ -58,7 +60,7 @@ El enlace debe ser de un producto de Amazon.es. Si contiene un ASIN en la ruta, 
 
 ## Publicación programada
 
-El workflow comprueba cada 15 minutos si hay una franja pendiente y publica como máximo un producto por franja. Hay 12 franjas diarias, aproximadamente cada 80 minutos, entre las 08:00 y las 22:40 de `Europe/Madrid` (ventana de 08:00 a 23:00). El cron usa minutos desplazados (`:07`, `:22`, `:37` y `:52`) para evitar los minutos de mayor carga de GitHub, y el workflow también se puede iniciar manualmente desde **Actions > Publicar ofertas... > Run workflow**. GitHub puede retrasar o incluso omitir eventos programados; el horario no está garantizado. Si se acumulan franjas vencidas, se intentan en orden desde la más antigua, una por ejecución. Si no hay productos en cola, la franja se omite. Los workflows de añadir y publicar comparten un grupo de concurrencia; el panel local actualiza `cola.json` mediante la API de GitHub y reintenta si el archivo cambia durante una actualización.
+El programador local y GitHub Actions revisan las mismas 12 franjas diarias, aproximadamente cada 80 minutos entre las 08:00 y las 22:40 de `Europe/Madrid`. El workflow comprueba cada 15 minutos; su cron usa minutos desplazados (`:07`, `:22`, `:37` y `:52`) y puede retrasarse u omitir ejecuciones. Si se acumulan franjas vencidas, GitHub Actions las intenta en orden desde la más antigua, una por ejecución. El bloqueo compartido y el estado de publicación evitan que local y GitHub procesen dos veces una misma franja. Si la cola está vacía, la franja no se marca como procesada y se volverá a intentar en la siguiente comprobación; así, un producto añadido después no queda bloqueado por una franja vacía. Los workflows de añadir y publicar comparten un grupo de concurrencia; el panel local actualiza `cola.json` mediante la API de GitHub y reintenta si el archivo cambia durante una actualización.
 
 Al publicar, el workflow actualiza `cola.json`, `estado_publicacion.json` y `ofertas.json` en el repositorio. Si Instagram no puede publicar un producto (por ejemplo, porque falta una imagen pública HTTPS o el texto excede el límite), se omite Instagram y el producto continúa por los demás canales; Instagram se marca como procesado para que no vuelva a bloquear ni se reintente ese producto. Si falla Telegram o Facebook, la franja no se marca como procesada y el producto sigue en la cola; el workflow guarda el progreso para no repetir los canales que ya publicaron.
 

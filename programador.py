@@ -544,11 +544,21 @@ def publicar_producto(
     return True
 
 def procesar_franja(horario):
+    zona_horaria = pytz.timezone('Europe/Madrid')
     if len(horario) == 5:
-        zona_horaria = pytz.timezone('Europe/Madrid')
         horario = zona_horaria.localize(
             datetime.strptime(datetime.now(zona_horaria).strftime('%Y-%m-%d') + ' ' + horario, '%Y-%m-%d %H:%M')
         ).strftime('%Y-%m-%d %H:%M')
+
+    hora_objetivo = zona_horaria.localize(
+        datetime.strptime(horario, '%Y-%m-%d %H:%M')
+    )
+    if hora_objetivo > datetime.now(zona_horaria):
+        print(
+            '[AVISO Programador] La franja ' + horario
+            + ' aún no ha llegado en Europe/Madrid; no se procesará.'
+        )
+        return None
 
     with bloqueo_publicaciones() as adquirido:
         if not adquirido:

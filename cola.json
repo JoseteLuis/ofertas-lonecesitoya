@@ -1,17 +1,5 @@
 [
   {
-    "titulo": "Auriculares Inalámbricos con Pantalla Táctil, Bluetooth 5.4 Cascos Negro",
-    "precio": "32,99€",
-    "desc": "ANC y ENC Cancelación de Ruido: Experimenta una reducción significativa del ruido en entornos desafiantes como trenes o autobuses urbanos gracias a la tecnología ANC de nuestros cascos inalambricos, que contrarresta activamente el sonido ambiental. La tecnología ENC reduce el bullicio urbano y garantiza una claridad de llamada excepcional en zonas de mucho tráfico, como centros urbanos o restaurantes concurridos. Convierte al Z9 Pro en tu compañero esencial para el trabajo y los viajes.\nDiseño de Pantalla Táctil LED: Con pantalla táctil HD, los cascos bluetooth permiten gestionar llamadas, ajustar el volumen, cambiar canciones y consultar la hora con un solo toque, activar el modo de cancelación de ruido y más, sin necesidad de buscar el móvil. Además, la pantalla táctil ofrece varias funciones prácticas, como linterna, ajuste de brillo, cambio de fondo de pantalla y otras funciones. Perfecta para usuarios expertos en tecnología que aprecian un diseño elegante y moderno.\n5 Modos de Ecualización (EQ): Estos cascos inalambricos cancelacion de ruido activa adoptan un diseño estéreo único con bobinas dinámicas de fibra de carbono biológica de 14,2 mm, lo que permite disfrutar de bajos potentes y agudos nítidos. Además, incluyen cinco modos de ecualizador ajustables (estándar, clásico, jazz, rock, pop), permitiéndote adaptar el perfil de sonido a diferentes estilos musicales, garantizando una experiencia auditiva más personalizada y auténtica.\nÚltima Tecnología Bluetooth 5.4: Estos auriculares inalambricos bluetooth cuentan con Bluetooth 5.4, que ofrece una conectividad más rápida y fiable, permitiéndote disfrutar de streaming de audio sin interrupciones incluso en entornos saturados con múltiples señales inalámbricas. Además, los auriculares inalámbricos también incorporan un modo transparencia: Disfruta de un audio rico y nítido mientras mantienes la conciencia de tu entorno, perfecto tanto para videollamadas como para Tocar música.",
-    "url": "https://link.amazon/B0dlqMYGw?tag=lonecesitoya-21",
-    "categoria": "tecnologia",
-    "imagen": "https://m.media-amazon.com/images/I/71HYKqwpP8L._AC_SX679_.jpg",
-    "_cola_id": "1794257386905-o1j079l76td",
-    "_publicado_en": [
-      "instagram"
-    ]
-  },
-  {
     "titulo": "Lexar D40E Unidad Flash Dual USB Tipo-C, USB-A/C, 64GB, Champán Plateado",
     "precio": "16,99€",
     "desc": "Almacenamiento OTG 2 en 1 USB-C: la unidad dual JumpDrive D40E de Lexar cuenta con conectores USB tipo A y tipo C en un formato delgado y portátil para una fácil compatibilidad con dispositivos.\nVelocidades de transferencia de hasta 100 MB/s: según pruebas internas, el rendimiento puede variar según el dispositivo host, la interfaz y las condiciones de uso. 1 MB = 1 000 000 bytes\nDuradero y compacto: la memoria USB Lexar D40E cuenta con una carcasa de metal, soporta temperaturas de 0° a 50° C (32° F a 122° F) y es liviana (26 g) con dimensiones de 70,4 x 16,9 x 11,7 mm.\nPlug and Play: Amplia compatibilidad con sus teléfonos inteligentes, tabletas, computadoras portátiles, Mac y dispositivos tradicionales tipo A con USB tipo C, sin necesidad de instalar software. El diseño giratorio de 360° permite cambiar fácilmente entre conectores sin la molestia de perder una tapa.",
@@ -121,5 +109,17 @@
     "categoria": "hogar",
     "imagen": "https://m.media-amazon.com/images/I/91SsXOzrCRL._AC_SX679_.jpg",
     "_cola_id": "1794501998655-322ct7zr0c5"
+  },
+  {
+    "titulo": "Auriculares Inalámbricos con Pantalla Táctil, Bluetooth 5.4 Cascos Negro",
+    "precio": "32,99€",
+    "desc": "ANC y ENC Cancelación de Ruido: Experimenta una reducción significativa del ruido en entornos desafiantes como trenes o autobuses urbanos gracias a la tecnología ANC de nuestros cascos inalambricos, que contrarresta activamente el sonido ambiental. La tecnología ENC reduce el bullicio urbano y garantiza una claridad de llamada excepcional en zonas de mucho tráfico, como centros urbanos o restaurantes concurridos. Convierte al Z9 Pro en tu compañero esencial para el trabajo y los viajes.\nDiseño de Pantalla Táctil LED: Con pantalla táctil HD, los cascos bluetooth permiten gestionar llamadas, ajustar el volumen, cambiar canciones y consultar la hora con un solo toque, activar el modo de cancelación de ruido y más, sin necesidad de buscar el móvil. Además, la pantalla táctil ofrece varias funciones prácticas, como linterna, ajuste de brillo, cambio de fondo de pantalla y otras funciones. Perfecta para usuarios expertos en tecnología que aprecian un diseño elegante y moderno.\n5 Modos de Ecualización (EQ): Estos cascos inalambricos cancelacion de ruido activa adoptan un diseño estéreo único con bobinas dinámicas de fibra de carbono biológica de 14,2 mm, lo que permite disfrutar de bajos potentes y agudos nítidos. Además, incluyen cinco modos de ecualizador ajustables (estándar, clásico, jazz, rock, pop), permitiéndote adaptar el perfil de sonido a diferentes estilos musicales, garantizando una experiencia auditiva más personalizada y auténtica.\nÚltima Tecnología Bluetooth 5.4: Estos auriculares inalambricos bluetooth cuentan con Bluetooth 5.4, que ofrece una conectividad más rápida y fiable, permitiéndote disfrutar de streaming de audio sin interrupciones incluso en entornos saturados con múltiples señales inalámbricas. Además, los auriculares inalámbricos también incorporan un modo transparencia: Disfruta de un audio rico y nítido mientras mantienes la conciencia de tu entorno, perfecto tanto para videollamadas como para Tocar música.",
+    "url": "https://link.amazon/B0dlqMYGw?tag=lonecesitoya-21",
+    "categoria": "tecnologia",
+    "imagen": "https://m.media-amazon.com/images/I/71HYKqwpP8L._AC_SX679_.jpg",
+    "_cola_id": "1794257386905-o1j079l76td",
+    "_publicado_en": [
+      "instagram"
+    ]
   }
 ]

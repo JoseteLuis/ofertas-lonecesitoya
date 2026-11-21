@@ -1,14 +1,5 @@
 [
   {
-    "titulo": "Kindle Paperwhite (16 GB) de Amazon (modelo de 2024): pantalla de 7\" sin reflejos y semanas de autonomía | Con publicidad | Frambuesa",
-    "precio": "144,00€",
-    "desc": "Kindle Paperwhite: pantalla Paperwhite de 7\" con mayor contraste de imagen y pasadas de página rápidas.\nIdeal para viajar: su diseño ultraligero tiene una pantalla sin reflejos aún más grande y el contenido de la pantalla se mantiene nítido bajo cualquier luz.\nRefúgiate en la lectura: con el Kindle, no tendrás que lidiar con distracciones provenientes de redes sociales, notificaciones u otras apps.\nBatería suficiente incluso para los libros más largos: una sola carga por USB-C dura hasta 12 semanas.",
-    "url": "https://link.amazon/B0dq2Hv89?tag=lonecesitoya-21",
-    "categoria": "tecnologia",
-    "imagen": "https://m.media-amazon.com/images/I/617pSv5lZ5L._AC_SX569_.jpg",
-    "_cola_id": "1795120308918-3cn8hjwqvn5"
-  },
-  {
     "titulo": "Puma St Runner NL ZapatillasUnisex Adulto",
     "precio": "30,66€",
     "desc": "Historia del producto:\n\nEntra en un clásico y haz una declaración. Estos tenis actualizados listos para la calle combinan un estilo retro con detalles renovados. La parte superior de gamuza y nailon, el nuevo clip en el talón y la plantilla SOFTFOAM+ ofrecen un aspecto tradicional con comodidad moderna para ir a lugares y hacer las cosas. Con una entresuela ligeramente más alta, impacta con cada zancada.\n\nCaracterísticas y beneficios:\nLos productos de cuero de Puma apoyan la fabricación responsable a través del Grupo de Trabajo de Cuero: www.leatherworkinggroup.com\nSoft-Foam +: plantilla cómoda diseñada para proporcionar una amortiguación suave gracias a su talón extra grueso.\nDetalles:\nCorte regular.\nParte superior de nailon.\nSuperposiciones de gamuza.\nCierre de cordones.\nEntresuela sintética.\nSuela de goma.",
@@ -162,6 +153,18 @@
     "_publicado_en": [
       "facebook",
       "instagram"
+    ]
+  },
+  {
+    "titulo": "Kindle Paperwhite (16 GB) de Amazon (modelo de 2024): pantalla de 7\" sin reflejos y semanas de autonomía | Con publicidad | Frambuesa",
+    "precio": "144,00€",
+    "desc": "Kindle Paperwhite: pantalla Paperwhite de 7\" con mayor contraste de imagen y pasadas de página rápidas.\nIdeal para viajar: su diseño ultraligero tiene una pantalla sin reflejos aún más grande y el contenido de la pantalla se mantiene nítido bajo cualquier luz.\nRefúgiate en la lectura: con el Kindle, no tendrás que lidiar con distracciones provenientes de redes sociales, notificaciones u otras apps.\nBatería suficiente incluso para los libros más largos: una sola carga por USB-C dura hasta 12 semanas.",
+    "url": "https://link.amazon/B0dq2Hv89?tag=lonecesitoya-21",
+    "categoria": "tecnologia",
+    "imagen": "https://m.media-amazon.com/images/I/617pSv5lZ5L._AC_SX569_.jpg",
+    "_cola_id": "1795120308918-3cn8hjwqvn5",
+    "_publicado_en": [
+      "telegram"
     ]
   }
 ]
